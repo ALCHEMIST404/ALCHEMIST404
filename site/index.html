@@ -334,7 +334,15 @@
   function persistArchive(next) {
     if (!canPersist) { notify('Автосохранение недоступно. Скачайте резервную копию.'); return false; }
     try { localStorage.setItem(ARCHIVE_KEY, JSON.stringify(next)); return true; }
-    catch { canPersist = false; notify('Не удалось сохранить. Скачайте резервную копию JSON.'); return false; }
+    catch (error) {
+      if (error && error.name === 'QuotaExceededError') {
+        notify('Память браузера заполнена. Скачайте архив и освободите место.');
+      } else {
+        canPersist = false;
+        notify('Хранилище недоступно. Скачайте резервную копию JSON.');
+      }
+      return false;
+    }
   }
   function save() {
     const item = archive.events.find(event => event.id === currentId);
