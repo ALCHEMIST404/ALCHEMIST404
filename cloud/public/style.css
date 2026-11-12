@@ -33,3 +33,22 @@ input::placeholder{color:#647d96}
 .result-item label{margin:0}.result-item input{margin:5px 0 0;min-height:41px;padding:9px 11px}.status-select{width:100%;padding:8px;margin:0}.toast{position:fixed;right:20px;bottom:20px;max-width:min(400px,calc(100% - 40px));background:#183b4d;color:#effffb;border:1px solid #74cbb9;box-shadow:0 15px 40px #0008;border-radius:13px;padding:16px 20px;z-index:10}
 @media(max-width:780px){.editor-grid{grid-template-columns:1fr}.event-settings,.participants,.results{grid-column:1}.shell{margin-top:22px}.warning{font-size:11px}.panel{padding:20px}.auth{margin:20px auto}.result-item{grid-template-columns:31px 1fr 90px;gap:9px}.result-item>label:last-child{grid-column:3}.result-item .place{font-size:18px}.result-item .result-name{font-size:12px}.result-item input{max-width:100%}}
 @media(max-width:450px){.header{padding:17px 16px}.beta-tag{font-size:8px;padding:6px}.brand{font-size:18px}.shell{width:calc(100% - 26px)}.editor-actions{width:100%}.editor-actions .btn{flex:1}.settings-fields{grid-template-columns:1fr}.settings-fields label:first-child{grid-column:1}.event-grid{grid-template-columns:1fr}.result-item{grid-template-columns:24px 1fr 92px;gap:5px}.result-item label{font-size:10px}.participant-fields{grid-template-columns:67px 1fr}}
+
+
+/* Account backups and deletion: responsive, keyboard accessible. */
+.archive-panel{margin-top:25px;background:linear-gradient(130deg,#142c40,#112039)}
+.archive-panel h2{margin:0 0 7px;font-size:23px}
+.archive-panel p{margin-bottom:18px;max-width:660px}
+.archive-actions{display:flex;flex-wrap:wrap;gap:10px}
+.account-danger{margin:22px 0 40px}
+.account-danger .delete{padding:8px 2px}
+.delete-dialog{width:min(460px,calc(100% - 30px));max-height:85vh;overflow:auto;border-radius:18px;border:1px solid #785965;background:#142139;color:#ecf3fb;box-shadow:0 40px 100px #000c;padding:0}
+.delete-dialog::backdrop{background:#020916c7}
+.delete-form{padding:26px}
+.delete-form h2{margin:0 0 12px}
+.delete-form p{color:#d3b5bf;line-height:1.6;margin-bottom:22px}
+.delete-form label{margin:0 0 14px}
+.dialog-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:20px}
+.danger-button{background:#ae4152;color:#fff}
+.danger-button:hover{background:#c95264}
+@media(max-width:600px){.archive-actions{display:grid;grid-template-columns:1fr}.archive-actions .btn{width:100%}.delete-form{padding:20px}.dialog-actions{display:grid;grid-template-columns:1fr 1fr}.dialog-actions .btn{padding:10px}}
