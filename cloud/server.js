@@ -143,8 +143,8 @@ function normalizeTournament(input) {
     const bib=Number(p.bib||i+1);
     if(!Number.isInteger(bib)||bib<1||bib>999999||bibs.has(bib))throw httpError(400,'Стартовые номера должны быть уникальными');
     bibs.add(bib);
+    // An incomplete participant is a valid draft. The user can fill the name later.
     const name=str(p.name,120);
-    if(name.length<1)throw httpError(400,'У участника отсутствует имя');
     const penalty=Number(p.penalty||0);
     if(!Number.isFinite(penalty)||penalty<0||penalty>1000000)throw httpError(400,'Неверный штраф');
     return {
@@ -216,6 +216,8 @@ async function api(req,res,url) {
   }
   if(url.pathname==='/api/tournaments'&&req.method==='POST'){
     limit(req,'create',30,60*60*1000);
+    const count=await pool.query('SELECT count(*)::integer AS total FROM sp_tournaments WHERE user_id=$1',[user.id]);
+    if(count.rows[0].total>=100)throw httpError(409,'Максимум 100 турниров на один тестовый аккаунт');
     const body=await bodyJson(req);
     const data=normalizeTournament(body.data||blankTournament());
     const id=crypto.randomUUID();
