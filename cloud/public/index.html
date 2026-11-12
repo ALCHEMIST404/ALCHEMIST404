@@ -53,6 +53,17 @@
             <input id="importAllFile" type="file" accept=".json,application/json" hidden>
           </div>
         </section>
+        <section class="panel account-security">
+          <div class="eyebrow">БЕЗОПАСНОСТЬ АККАУНТА</div>
+          <h2>Сменить пароль</h2>
+          <p class="small muted">После смены пароля остальные устройства автоматически выйдут из аккаунта.</p>
+          <form id="changePasswordForm" autocomplete="off">
+            <label>Текущий пароль<input name="currentPassword" type="password" minlength="12" maxlength="128" autocomplete="current-password" required></label>
+            <label>Новый пароль<input name="newPassword" type="password" minlength="12" maxlength="128" autocomplete="new-password" required></label>
+            <label>Повтори новый пароль<input name="repeatPassword" type="password" minlength="12" maxlength="128" autocomplete="new-password" required></label>
+            <button type="submit" id="changePasswordButton" class="btn secondary">Изменить пароль</button>
+          </form>
+        </section>
         <section class="account-danger">
           <button id="showDeleteAccount" type="button" class="delete">Удалить тестовый аккаунт и все его данные</button>
         </section>
