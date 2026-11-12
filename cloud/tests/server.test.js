@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const {
   normalizeTournament,
+  normalizeBackup,
   emailValue,
   validatePassword,
   passwordHash,
@@ -80,4 +81,40 @@ test('reject malformed date and negative fees', () => {
   assert.throws(()=>normalizeTournament(input),/дата/);
   input.event.date='2026-11-13';input.event.fee=-1;
   assert.throws(()=>normalizeTournament(input),/взнос/);
+});
+
+test('cloud backup imports all event records without shared IDs', () => {
+  const one=blankTournament();
+  const second=blankTournament();
+  second.event.name='Второй турнир';
+  const backup={format:'startpult-cloud-backup-v1',tournaments:[{id:'untrusted',data:one},{id:'untrusted',data:second}]};
+  const imported=normalizeBackup(backup);
+  assert.equal(imported.length,2);
+  assert.equal(imported[1].event.name,'Второй турнир');
+  assert.equal(Object.hasOwn(imported[0],'id'),false);
+});
+test('old single-tournament backup remains supported',()=>{
+  const restored=normalizeBackup(blankTournament());
+  assert.equal(restored.length,1);
+});
+test('local archive schema 2 remains supported',()=>{
+  const old={schema:2,activeId:'local',events:[{id:'local',data:blankTournament()}]};
+  const restored=normalizeBackup(old);
+  assert.equal(restored.length,1);
+  assert.equal(restored[0].participants.length,0);
+});
+test('malformed and empty archives fail closed',()=>{
+  assert.throws(()=>normalizeBackup({format:'startpult-cloud-backup-v1',tournaments:[]}),/от 1 до 100/);
+  assert.throws(()=>normalizeBackup({schema:2,events:[{}]}),/Нет данных турнира/);
+  assert.throws(()=>normalizeBackup({schema:1,events:[{data:blankTournament()}]}),/Неизвестный формат/);
+  assert.throws(()=>normalizeBackup(null),/Некорректный архив/);
+});
+test('backup enforces per-tournament validation',()=>{
+  const bad=blankTournament();
+  bad.event.name='X';
+  assert.throws(()=>normalizeBackup({schema:2,events:[{data:bad}]}),/Название турнира слишком короткое/);
+});
+test('maximum of 100 backup tournaments',()=>{
+  const many=Array.from({length:101},()=>({data:blankTournament()}));
+  assert.throws(()=>normalizeBackup({format:'startpult-cloud-backup-v1',tournaments:many}),/от 1 до 100/);
 });
