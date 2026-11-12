@@ -41,7 +41,7 @@ test('HTTP integration: separate users, saved events, backup, restore, delete ac
       tournaments.set(id,{id,user_id,data:JSON.parse(data),revision:1,created_at:now(),updated_at:now()});
       return rows(sql.includes('RETURNING updated_at')?[{updated_at:tournaments.get(id).updated_at,revision:1}]:[]);
     }
-    if (sql.startsWith('SELECT id,data,updated_at FROM sp_tournaments WHERE user_id=')) {
+    if (sql.startsWith('SELECT id,data,updated_at,revision FROM sp_tournaments WHERE user_id=')) {
       return rows([...tournaments.values()].filter(x=>x.user_id===params[0]).map(x=>({
         id:x.id,data:x.data,updated_at:x.updated_at,revision:x.revision
       })));
@@ -51,7 +51,7 @@ test('HTTP integration: separate users, saved events, backup, restore, delete ac
         data:x.data,created_at:x.created_at,updated_at:x.updated_at
       })));
     }
-    if (sql.startsWith('SELECT data,updated_at FROM sp_tournaments WHERE id=')) {
+    if (sql.startsWith('SELECT data,updated_at,revision FROM sp_tournaments WHERE id=')) {
       const event=tournaments.get(params[0]);
       return rows(event && event.user_id===params[1]?[{data:event.data,updated_at:event.updated_at,revision:event.revision}]:[]);
     }
