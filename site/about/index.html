@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#091327">
+<meta name="description" content="СтартПульт: стартовые списки, категории, результаты, взносы и протоколы любительских соревнований в одной программе.">
+<title>СтартПульт | Организуйте соревнования, а не таблицы</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#091327;color:#e9f5ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse 60% 25% at 85% 4%,#18536f66,transparent),#091327}
+a{color:inherit;text-decoration:none}.wrap{width:min(1120px,calc(100% - 44px));margin:auto}
+header{display:flex;align-items:center;justify-content:space-between;padding:26px 0}header nav{display:flex;gap:26px;font-size:13px;color:#a3b9d1}
+.logo{display:flex;align-items:center;gap:11px;font-size:20px;font-weight:900;letter-spacing:.03em}.logo b{padding:8px 13px;border-radius:13px;background:#85ead9;color:#10303a;font-size:24px}.logo span span{font-weight:400}
+.hero{padding:95px 0 66px;text-align:center}.eyebrow{display:inline-flex;align-items:center;border:1px solid #3e766d;background:#15393f;color:#a2f1e2;border-radius:999px;padding:10px 16px;font-size:11px;font-weight:800;letter-spacing:.13em}
+h1{font-size:clamp(43px,7.1vw,77px);line-height:1.07;letter-spacing:-.064em;margin:23px auto 22px;max-width:950px}h1 em{font-style:normal;color:#90efdd}
+.hero p{color:#b1c5db;line-height:1.75;font-size:18px;max-width:650px;margin:0 auto 30px}.buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.button{display:inline-flex;padding:15px 23px;border-radius:12px;background:#87e7d6;color:#102b35;font-weight:800;font-size:14px}
+.button.secondary{background:#1a304a;color:#f0f8ff;border:1px solid #405671}
+.tiny{font-size:12px!important;margin-top:18px!important;color:#8ba3bc!important}
+.preview{border:1px solid #304866;border-radius:24px;background:#11213a;padding:12px;box-shadow:0 28px 95px #0008;max-width:1030px;margin:0 auto 96px}
+.window{border-radius:15px;overflow:hidden;display:grid;grid-template-columns:210px minmax(0,1fr);min-height:405px;background:#e8eff7;color:#17253b}
+.side{padding:23px 14px;background:#111f37;color:#afc4db}.side h3{color:#effcff;font-size:17px;margin:2px 9px 34px}.side .item{font-size:12px;padding:14px 12px;border-radius:10px;margin-bottom:8px}.side .active{background:#204154;color:#9ef7e2}
+.demo{padding:24px 28px 30px}.demo small{font-size:10px;color:#7b90a8;letter-spacing:.13em;font-weight:800}.demo h2{color:#17273b;letter-spacing:-.04em;font-size:28px;margin:7px 0 18px}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.metric{background:#fff;border:1px solid #d9e1eb;border-radius:12px;padding:19px 18px}.metric label{display:block;color:#71869c;font-size:11px}.metric strong{display:block;font-size:27px;margin-top:9px}
+.gridtable{background:#fff;border-radius:13px;margin-top:19px;border:1px solid #d9e1eb;overflow:hidden}.gridtable .bar{padding:16px 18px;font-weight:800;font-size:13px;border-bottom:1px solid #e4eaf0}.gridtable table{border-collapse:collapse;width:100%;font-size:12px}.gridtable th{text-align:left;color:#7c8da0;background:#f7f9fc;font-weight:700}.gridtable td,.gridtable th{padding:13px 17px;border-bottom:1px solid #edf1f5}.gridtable tr:last-child td{border:0}.success{color:#07826b;font-weight:800}
+.caption{color:#92acc5;text-align:center;font-size:12px;margin:13px 8px 4px}
+section.content{padding:0 0 90px}.heading{font-size:clamp(30px,4.5vw,46px);letter-spacing:-.05em;margin:12px 0 25px}.kicker{font-size:11px;letter-spacing:.18em;font-weight:850;color:#8ee7d7}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card{border:1px solid #2b435f;border-radius:16px;padding:25px;background:#13243d}.symbol{font-size:25px;color:#92f1db}.card h3{font-size:19px;margin:16px 0 8px}.card p{font-size:14px;line-height:1.7;color:#acbfd3;margin:0}
+.band{background:linear-gradient(125deg,#163b4b,#17213b);border:1px solid #36596c;border-radius:20px;padding:39px;display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-bottom:90px}.band h2{font-size:32px;letter-spacing:-.04em;margin:0 0 12px}.band p{color:#b5c6d7;line-height:1.75;margin:0}.band ul{margin:0;padding-left:20px;line-height:2.3;color:#d8e9f8}
+.price{text-align:center;padding:0 0 105px}.price h2{margin-bottom:13px}.price p{color:#b1c1d2;line-height:1.65}.pricecard{margin:30px auto 0;background:#142641;border:1px solid #456881;border-radius:20px;max-width:520px;padding:34px;text-align:left}
+.pricecard .pricevalue{font-size:42px;font-weight:900;letter-spacing:-.05em;margin:12px 0}.pricevalue small{font-size:14px;font-weight:500;color:#9cbbcf;letter-spacing:0}
+.closed{padding:14px;text-align:center;border-radius:11px;background:#263c58;color:#c4d6e7;font-weight:800;font-size:13px;margin-top:23px}
+.pricecard p{font-size:13px}footer{border-top:1px solid #283c54;padding:30px 0 45px;display:flex;gap:20px;justify-content:space-between;color:#849bb2;font-size:12px}
+@media(max-width:760px){header nav a:not(:last-child){display:none}.hero{padding:65px 0 42px}.hero p{font-size:16px}.window{grid-template-columns:1fr}.side{display:none}.demo{padding:17px}.summary{gap:7px}.metric{padding:13px 10px}.metric strong{font-size:20px}.gridtable td,.gridtable th{padding:11px 6px;font-size:10px}.preview{margin-bottom:65px}.cards{grid-template-columns:1fr}.band{grid-template-columns:1fr;padding:25px;margin-bottom:70px}.price{padding-bottom:70px}footer{display:block;line-height:2}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="#top" aria-label="СтартПульт"><b>⌁</b><span>СТАРТ<span>ПУЛЬТ</span></span></a><nav><a href="#features">Возможности</a><a href="#how">Как работает</a><a href="#access">Доступ</a></nav></header>
+<main id="top">
+<section class="hero"><span class="eyebrow">ДЛЯ ЛЮБИТЕЛЬСКИХ ТУРНИРОВ И КЛУБОВ</span><h1>Организуйте соревнования.<br><em>А не таблицы.</em></h1><p>Участники, стартовые номера, секунды, штрафы, места и дипломы. Одна программа вместо десятка таблиц, которая работает прямо в браузере.</p><div class="buttons"><a class="button" href="/">Запустить приложение ↗</a><a class="button secondary" href="#access">Узнать о доступе</a></div><p class="tiny">Без обязательной подписки · Данные остаются в браузере организатора</p></section>
+<section class="preview" aria-label="Пример интерфейса СтартПульта">
+<div class="window"><aside class="side"><h3>⌁ СтартПульт</h3><div class="item active">▦　Обзор</div><div class="item">♙　Участники</div><div class="item">◈　Результаты</div><div class="item">▤　Финансы</div></aside>
+<div class="demo"><small>ПАНЕЛЬ ОРГАНИЗАТОРА / ОБЗОР</small><h2>Турнир под контролем.</h2><div class="summary"><div class="metric"><label>Участников</label><strong>24</strong></div><div class="metric"><label>Финишировали</label><strong>18</strong></div><div class="metric"><label>Взносы</label><strong>12 000 ₽</strong></div></div><div class="gridtable"><div class="bar">Итоговый протокол · пример</div><table><thead><tr><th>Место</th><th>Старт №</th><th>Категория</th><th>Результат</th></tr></thead><tbody><tr><td>01</td><td>017</td><td>Открытая</td><td class="success">03:42</td></tr><tr><td>02</td><td>009</td><td>Открытая</td><td>03:55</td></tr><tr><td>03</td><td>023</td><td>Открытая</td><td>04:01</td></tr></tbody></table></div></div></div><p class="caption">Схематичная демонстрация функций. Цифры вымышлены и не являются данными реального турнира.</p></section>
+<section class="content" id="features"><div class="kicker">ВСЁ В ОДНОМ МЕСТЕ</div><h2 class="heading">Меньше Excel.<br>Больше соревнований.</h2><div class="cards"><article class="card"><div class="symbol">♙</div><h3>Стартовые списки</h3><p>Участники, команды, категории, стартовые номера и отметки взносов. Импорт и экспорт CSV.</p></article><article class="card"><div class="symbol">◈</div><h3>Результаты</h3><p>Подсчёт мест по времени или очкам, обработка штрафов, DNS, DNF и DSQ. Отдельные зачёты по категориям.</p></article><article class="card"><div class="symbol">▤</div><h3>Документы</h3><p>Итоговые протоколы, таблицы для Excel, печать дипломов призёров и резервная копия данных.</p></article></div></section>
+<section class="band" id="how"><div><h2>Никакой серверной магии</h2><p>Веди один турнир на своём устройстве, сохраняй резервную копию и переноси между компьютерами. Не нужно создавать аккаунты каждому спортсмену.</p></div><ul><li>Работает без постоянного интернета после загрузки</li><li>Нет обязательной серверной базы</li><li>До 2 500 участников в одном событии</li><li>Экспорт данных и печать из браузера</li></ul></section>
+<section class="price" id="access"><div class="kicker">РАННИЙ ДОСТУП</div><h2 class="heading">Инструмент без подписочного цирка</h2><p>Коммерческий запуск готовится. Оплата пока не подключена, заказы не принимаются.</p><div class="pricecard"><div class="kicker">ПЛАНИРУЕМАЯ ЦЕНА</div><div class="pricevalue">1 490 ₽ <small>/ одна покупка</small></div><p>Автономное приложение для ведения любительских соревнований с экспортом и дипломами.</p><div class="closed">Продажи пока не открыты</div><p>Цена указана как предварительная гипотеза и не является публичной офертой. На этой странице нет форм сбора персональных данных и фиктивных платёжных кнопок.</p></div></section>
+</main><footer><span><strong>СТАРТПУЛЬТ</strong> © 2026</span><span>Программа для организаторов любительских соревнований</span></footer>
+</div></body></html>

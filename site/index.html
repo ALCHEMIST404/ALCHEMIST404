@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1426">
+  <title>СтартПульт • управление соревнованиями</title>
+  <style>:root{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#dce5f5;background:#080d19;font-synthesis:none;font-size:15px}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #79d4ff;outline-offset:3px}a{color:inherit;text-decoration:none}.app-shell{display:flex;min-height:100vh}.sidebar{position:sticky;top:0;width:260px;flex:0 0 260px;height:100vh;padding:30px 21px;display:flex;flex-direction:column;background:#0a1224;border-right:1px solid #1f2a40}.brand{display:flex;gap:12px;align-items:center;font-size:21px;font-weight:900;letter-spacing:.04em}.brand-mark{display:grid;place-items:center;background:linear-gradient(140deg,#6fe9eb,#6684fc);border-radius:15px;width:44px;height:44px;color:#061223;font-size:33px}.brand-thin{font-weight:300}.brand small{display:block;font-size:8px;letter-spacing:.14em;color:#71809b;margin-top:4px}.side-label,.eyebrow{font-size:10px;letter-spacing:.16em;font-weight:800;color:#81a4c4}.side-label{padding:51px 12px 15px;color:#53647f}.navigation{display:grid;gap:8px}.nav-link{color:#91a0b8;background:transparent;border:1px solid transparent;border-radius:12px;text-align:left;display:flex;gap:14px;padding:15px 16px;align-items:center;font-weight:650}.nav-link span{font-size:20px;line-height:1;color:#7291b6}.nav-link.active{background:#142441;border-color:#263a5b;color:#eaf3ff}.nav-link.active span{color:#65ddf1}.nav-link:hover{background:#162039}.sidebar-bottom{margin-top:auto}.sidebar-bottom p{font-size:12px;color:#8290aa;line-height:1.6}.privacy-indicator{display:block;color:#64d2a6;font-size:10px;letter-spacing:.13em;font-weight:800}.main{min-width:0;max-width:1800px;width:100%;margin:0 auto;padding:32px 43px;background:radial-gradient(ellipse at 97% 0%,rgba(45,81,135,.12),transparent 50%),#0c1322}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:31px}.topbar h1{font-weight:720;letter-spacing:-.04em;font-size:25px;margin:10px 0 0}.top-actions,.actions{display:flex;align-items:center;gap:10px}button.primary,button.secondary,button.ghost,.hero-button{border:1px solid transparent;padding:12px 18px;border-radius:10px;font-weight:700;font-size:13px;white-space:nowrap;transition:background .15s ease,transform .15s ease}button:hover,.hero-button:hover{transform:translateY(-1px)}button.primary{background:#79e3d0;color:#051b26;box-shadow:0 4px 25px #48cfba14}button.primary:hover{background:#9ff2e4}.secondary{background:#24496b;color:#e8f4ff;border-color:#326185!important}.ghost{background:#131e30;color:#c8d5e6;border-color:#30425c!important}.ghost:hover{background:#1d2c44}.full{width:100%}.screen{display:none}.screen.active{display:block}.hero{min-height:274px;border:1px solid #304564;border-radius:20px;overflow:hidden;position:relative;background:radial-gradient(circle at 82% 51%,#295675 0%,transparent 34%),linear-gradient(110deg,#122d41,#13233f 64%,#203d69);padding:36px 40px;display:flex}.hero-content{position:relative;z-index:1}.hero-chip{border:1px solid #55768f;background:#19364a;border-radius:99px;color:#a3def0;padding:8px 12px;font-size:10px;letter-spacing:.15em;font-weight:800}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#6be7b9;margin-left:5px}.hero h2{font-size:37px;line-height:1.1;max-width:680px;letter-spacing:-.045em;margin:30px 0 9px;color:#fff}.hero p{font-size:14px;color:#b3c8d9}.hero-button{margin-top:14px;background:#deefff;color:#10263c;display:flex;gap:28px;align-items:center}.hero-art{position:absolute;right:25px;top:-95px;height:470px;width:420px;opacity:.65}.ring{position:absolute;border:1px solid rgba(149,222,255,.23);border-radius:50%;inset:0}.ring.two{inset:48px}.ring.three{inset:95px;border-width:3px;border-color:#87c7ee77}.hero-big{position:absolute;inset:0;display:grid;place-items:center;color:#e6f8ff;font-size:118px;font-weight:900;letter-spacing:-.1em}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:17px 0 21px}.metric{background:#121f33;border:1px solid #253651;border-radius:15px;min-height:137px;padding:22px}.metric small{display:block;font-size:10px;font-weight:800;letter-spacing:.12em;color:#7e9db7}.metric strong{display:block;font-size:36px;letter-spacing:-.035em;color:#f3f7ff;margin:11px 0 3px}.metric span{font-size:12px;color:#8c9cb4}.panel{background:#111e31;border:1px solid #253651;border-radius:16px}.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;border-bottom:1px solid #26364b;padding:26px 27px}.panel h3{font-size:18px;margin:8px 0 0;letter-spacing:-.025em}.muted{font-size:12px;color:#91a1b8}.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;padding:24px 27px 30px}label{display:flex;flex-direction:column;gap:9px;color:#98abc4;font-size:12px;font-weight:650}input:not([type=checkbox]),select{border:1px solid #344761;background:#0b1729;color:#e6eef8;min-width:0;padding:13px 14px;border-radius:9px;outline:none;width:100%;color-scheme:dark}input:not([type=checkbox]):focus,select:focus{border-color:#74d7dc}input::placeholder{color:#60738f}.footer{font-weight:800;letter-spacing:.11em;text-align:center;padding:38px 0 10px;font-size:9px;color:#52627c}.footer span{margin:0 10px;color:#78ded4}.section-toolbar{display:flex;justify-content:space-between;align-items:center;gap:20px;margin:7px 0 24px}.section-toolbar h2{font-size:28px;letter-spacing:-.04em;margin:9px 0 0}.section-toolbar p{margin:8px 0 0}.table-panel{overflow:hidden}.filter-row{display:flex;align-items:center;gap:12px;padding:19px}.filter-row input{max-width:440px}.filter-row select{max-width:230px}.count-pill{background:#203247;border:1px solid #304562;color:#b8c9dc;font-size:11px;padding:10px 12px;border-radius:30px;white-space:nowrap}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;text-align:left;min-width:760px}th{background:#172439;color:#7b93b1;font-size:10px;letter-spacing:.1em;padding:15px 17px;white-space:nowrap}td{border-top:1px solid #24364b;padding:15px 17px;color:#becbdf;font-size:13px}td strong{color:#eef5ff;font-weight:700}td small{display:block;color:#8294af;margin-top:4px}.bib{display:inline-grid;place-items:center;min-width:39px;border-radius:7px;padding:8px;background:#253c56;color:#a7daff;font-weight:850}.paid{color:#6fe7b7}.unpaid{color:#ecb57f}.result-strong{font-variant-numeric:tabular-nums}.row-actions{display:flex;gap:6px}.mini-action{background:#1f3048;border:1px solid #324860;color:#c9d8e8;border-radius:8px;padding:8px 10px;font-size:12px}.mini-action:hover{background:#2b435d}.mini-action.delete{color:#efa4aa}.table-footer{padding:16px 20px;font-size:12px;color:#7d90ac;border-top:1px solid #27374f}.empty{padding:60px 18px;text-align:center;color:#97a7c1}.empty strong{display:block;color:#e4efff;font-size:18px;margin-bottom:10px}.result-category{margin:0 0 22px;overflow:hidden}.category-header{display:flex;justify-content:space-between;align-items:center;padding:23px 23px 20px}.category-header h3{margin:0}.category-header .muted{margin:0}.place-medal{border-radius:100px;padding:6px 11px;background:#263e52;color:#91cdd1;font-weight:850;font-size:11px}.place-medal.winner{background:#61542c;color:#fce59c}.document-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}.doc-card{padding:27px;display:flex;flex-direction:column;min-height:242px}.doc-card .doc-icon{font-size:28px;border:1px solid #3d5b72;background:#1b344d;color:#90f0e5;border-radius:12px;display:grid;place-items:center;height:48px;width:48px}.doc-card h3{margin:16px 0 4px;font-size:20px}.doc-card p{font-size:13px;color:#96a8bd;line-height:1.55;max-width:430px}.doc-card button{align-self:flex-start;margin-top:auto}.doc-card .slim{margin-top:10px}.info-note{padding:20px 24px;border-left:3px solid #76dbc9;background:#14283b;color:#a2bcd0;font-size:13px;line-height:1.7;margin:24px 0}.info-note strong{color:#ddfcf4}.reset-line{display:flex;justify-content:space-between;gap:20px;align-items:center;font-size:12px;color:#8396ab;padding:12px}.danger-link{border:none;background:none;color:#ffabb2;text-decoration:underline;padding:8px}.edit-dialog{border:1px solid #35506b;background:#101d32;color:#ecf4ff;border-radius:18px;width:min(590px,calc(100vw - 32px));max-height:90vh;overflow:auto;padding:0;box-shadow:0 24px 70px #0009}.edit-dialog::backdrop{background:#020813bd;backdrop-filter:blur(5px)}.dialog-heading{display:flex;justify-content:space-between;padding:25px 28px;border-bottom:1px solid #2a3d56}.dialog-heading h3{font-size:23px;margin:6px 0 0}.close-button{background:transparent;color:#a7bed7;border:none;font-size:22px}.dialog-fields{display:grid;gap:16px;padding:22px 28px 0}.dialog-fields .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.dialog-fields .two:nth-of-type(2){margin-bottom:-8px}.dialog-fields .result-input{margin-top:-18px;max-width:calc(50% - 7px)}.check-label{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px}.check-label input{accent-color:#79e3d0;height:18px;width:18px}.dialog-actions{padding:25px 28px;display:flex;justify-content:flex-end;gap:10px}.print-area{display:none}#toast{position:fixed;z-index:99;right:20px;bottom:20px;max-width:min(390px,90vw);background:#26586b;color:#eaffff;border-radius:10px;box-shadow:0 8px 40px #0008;padding:13px 17px;font-size:13px;opacity:0;transform:translateY(18px);pointer-events:none;transition:.2s}#toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:1160px){.sidebar{width:205px;flex-basis:205px}.main{padding:27px}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:750px){.app-shell{display:block}.sidebar{position:static;width:100%;height:auto;padding:17px;display:block;border-right:none;border-bottom:1px solid #26344a}.sidebar .brand{font-size:18px}.side-label,.sidebar-bottom{display:none}.navigation{display:flex;overflow:auto;margin-top:15px;gap:5px}.nav-link{white-space:nowrap;padding:10px;font-size:12px}.main{padding:20px 14px}.topbar{margin-bottom:20px;align-items:flex-start}.topbar h1{font-size:21px}.top-actions{flex-direction:column;align-items:flex-end}.top-actions button{padding:9px 10px;font-size:11px}.hero{padding:26px 24px;min-height:235px}.hero h2{font-size:28px;margin-top:30px}.hero-art{right:-245px}.metrics{gap:8px;margin:10px 0 17px}.metric{padding:17px;min-height:105px}.metric small{font-size:8px}.metric strong{font-size:28px}.form-grid{grid-template-columns:1fr;gap:18px;padding:20px}.panel-heading{padding:22px}.panel-heading .muted{display:none}.section-toolbar{align-items:flex-start;flex-direction:column}.filter-row{flex-wrap:wrap}.filter-row input,.filter-row select{max-width:none}.document-grid{grid-template-columns:1fr}.dialog-fields .result-input{max-width:none;margin-top:-10px}.dialog-fields .two:nth-of-type(2){grid-template-columns:1fr;margin-bottom:0}.footer{line-height:2.2}}
+@media print{@page{size:A4;margin:14mm}body{background:white!important;color:#111!important}.app-shell,#toast,.edit-dialog{display:none!important}.print-area{display:block!important;color:#111;background:white;font-family:Arial,sans-serif}.print-area h1{font-size:23pt;margin:0 0 7mm}.print-area h2{font-size:17pt;margin:8mm 0 3mm}.print-area .print-header{margin-bottom:9mm}.print-area table{border-collapse:collapse;width:100%;min-width:0}.print-area td,.print-area th{padding:7px 5px;color:#111;border:1px solid #aaa;font-size:9pt;background:white}.print-area th{font-weight:bold}.print-area .cert{height:249mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:8px double #111;page-break-after:always;break-after:page;padding:20mm}.print-area .cert:last-child{page-break-after:auto;break-after:auto}.print-area .cert-label{font-size:16pt;letter-spacing:.2em;text-transform:uppercase}.print-area .cert-title{font-size:42pt;font-weight:800;margin:13mm 0}.print-area .cert-name{font-size:28pt;font-weight:800;margin:13mm 0}.print-area .cert-category{font-size:16pt;margin:8mm 0}.print-area .cert-date{font-size:12pt;margin-top:25mm}}
+.sidebar-bottom .ghost{white-space:normal;line-height:1.3;padding:11px 9px;font-size:11px}
+</style>
+
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a href="#dashboard" class="brand" aria-label="СтартПульт, главное"><span class="brand-mark">⌁</span><span>СТАРТ<span class="brand-thin">ПУЛЬТ</span><small>ОРГАНИЗАТОР СОРЕВНОВАНИЙ</small></span></a>
+      <div class="side-label">РАБОЧЕЕ ПРОСТРАНСТВО · БЕТА</div>
+      <nav class="navigation" aria-label="Разделы">
+        <button class="nav-link active" data-tab="dashboard"><span>◫</span> Обзор</button>
+        <button class="nav-link" data-tab="participants"><span>♙</span> Участники</button>
+        <button class="nav-link" data-tab="results"><span>🏁</span> Результаты</button>
+        <button class="nav-link" data-tab="documents"><span>▤</span> Документы</button>
+      </nav>
+      <div class="sidebar-bottom"><a href="/about/" style="display:block;color:#94eedc;font-weight:750;margin:0 0 22px;text-decoration:none">О программе ↗</a><span class="privacy-indicator">● ЛОКАЛЬНЫЙ РЕЖИМ</span><p>Данные остаются в этом браузере. Для сохранности делайте резервную копию.</p><button id="backupSidebar" class="ghost full">↓ Сохранить резервную копию</button></div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><div><span class="eyebrow" id="screenEyebrow">РАБОЧЕЕ ПРОСТРАНСТВО</span><h1 id="screenTitle">Обзор мероприятия</h1></div><div class="top-actions"><button id="addTop" class="primary">+ Участник</button></div></header>
+      <section class="screen active" id="screen-dashboard" aria-label="Обзор">
+        <div class="hero"><div class="hero-content"><span class="hero-chip">EVENT CONTROL SYSTEM <span class="dot"></span> READY</span><h2 id="heroName">Новый турнир</h2><p id="heroMeta">Создайте мероприятие и добавьте участников</p><button class="hero-button" data-go="participants">Открыть стартовый список <span>↗</span></button></div><div class="hero-art" aria-hidden="true"><div class="ring one"></div><div class="ring two"></div><div class="ring three"></div><div class="hero-big">01</div></div></div>
+        <div class="metrics"><article class="metric"><small>ЗАРЕГИСТРИРОВАНО</small><strong id="metricTotal">0</strong><span>участников</span></article><article class="metric"><small>ПОЛУЧЕНЫ РЕЗУЛЬТАТЫ</small><strong id="metricFinished">0</strong><span>с результатом</span></article><article class="metric"><small>КАТЕГОРИИ</small><strong id="metricCategories">0</strong><span>зачётных групп</span></article><article class="metric"><small>ПОДТВЕРЖДЁННЫЕ ВЗНОСЫ</small><strong id="metricFees">0 ₽</strong><span id="feesSub">0 оплат</span></article></div>
+        <section class="panel"><div class="panel-heading"><div><div class="eyebrow">КОНФИГУРАЦИЯ</div><h3>Параметры мероприятия</h3></div><span class="muted">Сохраняются автоматически</span></div><form id="eventForm" class="form-grid"><label>Название соревнования<input name="name" maxlength="120" required></label><label>Дата<input name="date" type="date" required></label><label>Место проведения<input name="place" maxlength="120"></label><label>Дисциплина<input name="sport" maxlength="120"></label><label>Система зачёта<select name="scoring"><option value="time">Минимальное время</option><option value="points">Максимум очков</option></select></label><label>Стартовый взнос, ₽<input name="fee" type="number" min="0" max="1000000" step="1"></label></form></section>
+      </section>
+      <section class="screen" id="screen-participants" aria-label="Участники">
+        <div class="section-toolbar"><div><div class="eyebrow">РЕЕСТР</div><h2>Стартовый список</h2><p class="muted">Редактирование состава, категорий и взносов</p></div><div class="actions"><button class="ghost" id="importCsv">↑ Импорт CSV</button><button class="primary" id="addParticipant">+ Добавить</button></div></div>
+        <div class="panel table-panel"><div class="filter-row"><input id="participantSearch" type="search" placeholder="Поиск по ФИО, команде, номеру…" aria-label="Поиск участников"><select id="participantCategory" aria-label="Фильтр категории"><option value="all">Все категории</option></select><span class="count-pill" id="participantCount">0 записей</span></div><div class="table-wrap"><table><thead><tr><th>№</th><th>УЧАСТНИК</th><th>КАТЕГОРИЯ</th><th>РЕЗУЛЬТАТ</th><th>ВЗНОС</th><th></th></tr></thead><tbody id="participantRows"></tbody></table></div><div class="table-footer" id="participantFooter">Данные сохраняются локально</div></div>
+      </section>
+      <section class="screen" id="screen-results" aria-label="Результаты">
+        <div class="section-toolbar"><div><div class="eyebrow">ТАБЛИЦА ЛИДЕРОВ</div><h2>Официальные результаты</h2><p class="muted">Места пересчитываются автоматически, отдельно для каждой категории</p></div><div class="actions"><button id="printResults" class="ghost">⎙ Печать</button><button id="downloadCsv" class="primary">↓ Экспорт CSV</button></div></div>
+        <div id="resultSections"></div>
+      </section>
+      <section class="screen" id="screen-documents" aria-label="Документы">
+        <div class="section-toolbar"><div><div class="eyebrow">ЭКСПОРТ И ХРАНЕНИЕ</div><h2>Документы и данные</h2><p class="muted">Управление копиями и печатными документами</p></div></div>
+        <div class="document-grid">
+          <article class="panel doc-card"><div class="doc-icon">▤</div><h3>Итоговый протокол</h3><p>Категории, участники, места и результаты. Печать или сохранение в PDF через браузер.</p><button class="primary" id="printProtocol">Печать протокола ↗</button></article>
+          <article class="panel doc-card"><div class="doc-icon">◈</div><h3>Дипломы призёров</h3><p>Автоматически формирует дипломы участников, занявших первые три места в категориях.</p><button class="primary" id="printCertificates">Печать дипломов ↗</button></article>
+          <article class="panel doc-card"><div class="doc-icon">↧</div><h3>CSV с результатами</h3><p>Таблица в универсальном формате UTF‑8: импорт в Excel и Google Sheets.</p><button class="secondary" id="exportCsv2">Скачать CSV ↓</button></article>
+          <article class="panel doc-card"><div class="doc-icon">⌑</div><h3>Резервная копия</h3><p>Весь турнир в одном JSON-файле. Можно восстановить на другом компьютере.</p><button class="secondary" id="backupMain">Скачать JSON ↓</button><button class="ghost slim" id="restoreMain">Восстановить из JSON ↑</button></article>
+        </div>
+        <div class="info-note"><strong>Конфиденциальность без сервера.</strong> Информация об участниках не отправляется в интернет. Файлы экспортируются прямо из браузера. Если очистить данные браузера без резервной копии, восстановить их будет невозможно.</div>
+        <div class="reset-line"><span>Начать новый турнир без старых данных</span><button class="danger-link" id="resetData">Очистить текущий турнир</button></div>
+      </section>
+      <footer class="footer">СТАРТПУЛЬТ <span>•</span> ЛОКАЛЬНОЕ ПРИЛОЖЕНИЕ <span>•</span> НИКАКИХ СЛЕДЯЩИХ СКРИПТОВ</footer>
+    </main>
+  </div>
+  <dialog id="personDialog" class="edit-dialog"><form method="dialog" id="personForm"><div class="dialog-heading"><div><div class="eyebrow">КАРТОЧКА СПОРТСМЕНА</div><h3 id="dialogTitle">Новый участник</h3></div><button type="button" class="close-button" id="dialogClose" aria-label="Закрыть">✕</button></div><div class="dialog-fields"><label>ФИО<input name="name" maxlength="120" required autocomplete="off"></label><div class="two"><label>Стартовый номер<input name="bib" type="number" min="1" max="999999" required></label><label>Категория<input name="category" maxlength="80" required list="categoriesList"></label></div><label>Команда / клуб<input name="team" maxlength="120"></label><div class="two"><label id="resultLabel">Время (мм:сс.с)</label><label>Штраф <input name="penalty" type="number" min="0" max="1000000" step="0.001" value="0"></label></div><input name="result" class="result-input" aria-label="Результат" placeholder="Например: 12:35.2"><div class="two"><label>Статус<select name="status"><option value="OK">В зачёте</option><option value="DNS">Не стартовал</option><option value="DNF">Не финишировал</option><option value="DSQ">Дисквалификация</option></select></label><label class="check-label"><input type="checkbox" name="paid"> Взнос оплачен</label></div></div><div class="dialog-actions"><button type="button" class="ghost" id="personCancel">Отмена</button><button class="primary" type="submit" id="personSave">Сохранить участника</button></div></form></dialog>
+  <datalist id="categoriesList"></datalist>
+  <input type="file" id="csvFile" accept=".csv,text/csv,text/plain" hidden>
+  <input type="file" id="restoreFile" accept=".json,application/json" hidden>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div id="printArea" class="print-area"></div>
+<script>(function (root, factory) {
+  const value = factory();
+  if (typeof module === 'object' && module.exports) module.exports = value;
+  else root.StartCore = value;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  const STATUSES = ['OK', 'DNS', 'DNF', 'DSQ'];
+  const MAX_PARTICIPANTS = 2500;
+
+  function str(v, max = 120) { return String(v ?? '').trim().slice(0, max); }
+  function parseTime(value) {
+    const text = str(value, 30).replace(',', '.');
+    if (!text) return null;
+    if (!/^\d+(?::\d{1,2}){0,2}(?:\.\d{1,3})?$/.test(text)) return null;
+    const parts = text.split(':');
+    const secAndFraction = parts[parts.length - 1].split('.');
+    const seconds = Number(secAndFraction[0]);
+    if (seconds >= 60 && parts.length > 1) return null;
+    const fraction = secAndFraction[1] ? Number(secAndFraction[1].padEnd(3, '0')) : 0;
+    const minutes = parts.length >= 2 ? Number(parts[parts.length - 2]) : 0;
+    const hours = parts.length === 3 ? Number(parts[0]) : 0;
+    if (parts.length === 3 && minutes >= 60) return null;
+    const result = (hours * 3600 + minutes * 60 + seconds) * 1000 + fraction;
+    return Number.isFinite(result) && result >= 0 && result <= 359999999 ? result : null;
+  }
+  function formatTime(ms) {
+    if (!Number.isFinite(ms) || ms < 0) return '—';
+    const totalSecs = Math.floor(ms / 1000);
+    const hour = Math.floor(totalSecs / 3600);
+    const min = Math.floor(totalSecs % 3600 / 60);
+    const sec = totalSecs % 60;
+    const msPart = ms % 1000;
+    const core = hour > 0
+      ? `${hour}:${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+      : `${min}:${String(sec).padStart(2, '0')}`;
+    return core + (msPart ? '.' + String(msPart).padStart(3, '0').replace(/0+$/, '') : '');
+  }
+  function parsePoints(value) {
+    const text = str(value, 30).replace(',', '.');
+    if (!/^\d+(?:\.\d{1,3})?$/.test(text)) return null;
+    const number = Number(text);
+    return Number.isFinite(number) && number <= 1000000 ? number : null;
+  }
+  function evaluate(person, scoring) {
+    if (person.status !== 'OK') return null;
+    if (!str(person.result)) return null;
+    const penalty = Number(person.penalty);
+    if (!Number.isFinite(penalty) || penalty < 0 || penalty > 1000000) return null;
+    if (scoring === 'points') {
+      const base = parsePoints(person.result);
+      return base === null ? null : Math.round((base - penalty) * 1000) / 1000;
+    }
+    const base = parseTime(person.result);
+    return base === null ? null : base + Math.round(penalty * 1000);
+  }
+  function compare(a, b, scoring) {
+    const va = evaluate(a, scoring);
+    const vb = evaluate(b, scoring);
+    if (va === null && vb === null) return (a.bib || 0) - (b.bib || 0) || a.name.localeCompare(b.name, 'ru');
+    if (va === null) return 1;
+    if (vb === null) return -1;
+    return (scoring === 'points' ? vb - va : va - vb) || (a.bib || 0) - (b.bib || 0) || a.name.localeCompare(b.name, 'ru');
+  }
+  function ranked(participants, scoring, category = null) {
+    const data = participants.filter(p => category === null || p.category === category).sort((a, b) => compare(a, b, scoring));
+    let lastScore = null, lastPlace = null;
+    return data.map((p, index) => {
+      const score = evaluate(p, scoring);
+      const place = score === null ? null : (lastScore === score ? lastPlace : index + 1);
+      if (score !== null) { lastScore = score; lastPlace = place; }
+      return { ...p, score, place };
+    });
+  }
+  function scoresByCategory(participants, scoring) {
+    const categories = [...new Set(participants.map(p => p.category || 'Без категории'))].sort((a,b) => a.localeCompare(b,'ru'));
+    return categories.map(category => ({ category, rows: ranked(participants, scoring, category) }));
+  }
+  function newEvent() {
+    const date = new Date();
+    const current = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    return { version: 1, event: { name: 'Новый турнир', date: current, place: '', sport: 'Любительские соревнования', scoring: 'time', fee: 0 }, participants: [] };
+  }
+  function normalizePerson(item, index) {
+    const status = str(item.status || 'OK', 10).toUpperCase();
+    const num = Number(item.bib);
+    const penalty = Number(item.penalty);
+    return {
+      id: str(item.id, 100) || `p_${Date.now()}_${index}_${Math.random().toString(36).slice(2, 9)}`,
+      bib: Number.isInteger(num) && num >= 1 && num <= 999999 ? num : index + 1,
+      name: str(item.name, 120), team: str(item.team, 120), category: str(item.category, 80) || 'Общий зачёт',
+      result: str(item.result, 30), penalty: Number.isFinite(penalty) && penalty >= 0 && penalty <= 1000000 ? penalty : 0,
+      status: STATUSES.includes(status) ? status : 'OK', paid: item.paid === true || item.paid === 'true' || item.paid === 'да' || item.paid === '1'
+    };
+  }
+  function normalizeState(raw) {
+    if (!raw || typeof raw !== 'object' || !raw.event || !Array.isArray(raw.participants)) throw new Error('Некорректный формат данных');
+    if (raw.participants.length > MAX_PARTICIPANTS) throw new Error('Слишком много участников');
+    const e = raw.event;
+    const fee = Number(e.fee);
+    const participants = raw.participants.map(normalizePerson);
+    if (participants.some(p => !p.name)) throw new Error('У каждого участника должно быть имя');
+    if (new Set(participants.map(p => p.bib)).size !== participants.length) throw new Error('Повторяются стартовые номера');
+    if (new Set(participants.map(p => p.id)).size !== participants.length) throw new Error('Повторяются ID участников');
+    return { version: 1, event: { name: str(e.name,120) || 'Новый турнир', date: str(e.date,10), place: str(e.place,120), sport: str(e.sport,120), scoring: e.scoring === 'points' ? 'points' : 'time', fee: Number.isFinite(fee) && fee >= 0 && fee <= 1000000 ? fee : 0 }, participants };
+  }
+  function detectSeparator(text) {
+    const line = text.split(/\r?\n/)[0] || '';
+    const count = sep => (line.match(new RegExp(sep === '|' ? '\\|' : sep, 'g')) || []).length;
+    return [';', ',', '\t', '|'].sort((a,b) => count(b) - count(a))[0];
+  }
+  function csvRows(text, separator = detectSeparator(text)) {
+    const rows = [];
+    let row = [], field = '', quoted = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (quoted) {
+        if (c === '"' && text[i+1] === '"') { field += '"'; i++; }
+        else if (c === '"') quoted = false;
+        else field += c;
+      } else if (c === '"' && field === '') quoted = true;
+      else if (c === separator) { row.push(field); field = ''; }
+      else if (c === '\n') { row.push(field.replace(/\r$/, '')); if (row.some(x => x.trim())) rows.push(row); row = []; field = ''; }
+      else field += c;
+    }
+    if (quoted) throw new Error('CSV: незакрытые кавычки');
+    row.push(field.replace(/\r$/, ''));
+    if (row.some(x => x.trim())) rows.push(row);
+    return rows;
+  }
+  const HEADERS = {
+    name: ['имя','фио','участник','name','participant','спортсмен'], team: ['команда','клуб','team','club'],
+    category: ['категория','зачёт','зачет','category','group'], bib: ['номер','стартовый номер','bib','number','№'],
+    result: ['результат','время','очки','result','time','score'], penalty: ['штраф','penalty'],
+    paid: ['оплачено','оплата','paid'], status: ['статус','status']
+  };
+  function importCsv(text, existing = []) {
+    if (text.length > 2_000_000) throw new Error('CSV-файл слишком большой');
+    const rows = csvRows(text.replace(/^\uFEFF/, ''));
+    if (rows.length < 2) throw new Error('CSV должен содержать заголовок и строки');
+    const header = rows[0].map(x => x.trim().toLowerCase());
+    const indexes = Object.fromEntries(Object.entries(HEADERS).map(([key, names]) => [key, header.findIndex(h => names.includes(h))]));
+    if (indexes.name < 0) throw new Error('Не найден столбец «Имя» или «ФИО»');
+    const used = new Set(existing.map(p => p.bib));
+    let next = 1;
+    const result = [];
+    for (const row of rows.slice(1)) {
+      if (!row.some(x => x.trim())) continue;
+      const get = key => indexes[key] < 0 ? '' : (row[indexes[key]] ?? '').trim();
+      const name = get('name');
+      if (!name) continue;
+      let bib = Number(get('bib'));
+      if (!Number.isInteger(bib) || bib < 1 || bib > 999999 || used.has(bib)) {
+        while (used.has(next)) next++;
+        bib = next++;
+      }
+      used.add(bib);
+      const paid = /^(да|yes|true|1|оплачено)$/i.test(get('paid'));
+      const participant = normalizePerson({bib, name, team: get('team'), category:get('category'), result:get('result'), penalty:get('penalty'),status:get('status'),paid}, existing.length + result.length);
+      result.push(participant);
+      if (existing.length + result.length > MAX_PARTICIPANTS) throw new Error('Превышен лимит 2500 участников');
+    }
+    if (!result.length) throw new Error('В файле нет строк с именами');
+    return result;
+  }
+  function safeCsv(value) {
+    let t = String(value ?? '');
+    if (/^[\s]*[=+\-@\t\r]/.test(t)) t = "'" + t;
+    return '"' + t.replace(/"/g, '""') + '"';
+  }
+  function exportResults(state) {
+    const headings = ['Место в категории','Стартовый номер','ФИО','Команда','Категория','Результат','Штраф','Итог','Статус','Оплачено'];
+    const rows = scoresByCategory(state.participants, state.event.scoring).flatMap(section => section.rows.map(p => [
+      p.place || '', p.bib, p.name, p.team, p.category, p.result, p.penalty,
+      p.score === null ? '' : (state.event.scoring === 'time' ? formatTime(p.score) : p.score), p.status, p.paid ? 'Да' : 'Нет'
+    ]));
+    return '\uFEFF' + [headings, ...rows].map(row => row.map(safeCsv).join(';')).join('\r\n') + '\r\n';
+  }
+  return { parseTime, formatTime, parsePoints, evaluate, ranked, scoresByCategory, newEvent, normalizeState, normalizePerson, csvRows, importCsv, exportResults, safeCsv };
+});
+</script>
+<script>(() => {
+  'use strict';
+  const C = window.StartCore;
+  const KEY = 'startpult.v1';
+  const q = selector => document.querySelector(selector);
+  const qa = selector => [...document.querySelectorAll(selector)];
+  const esc = text => String(text ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[char]));
+  const rub = v => new Intl.NumberFormat('ru-RU', {maximumFractionDigits:0}).format(v) + ' ₽';
+  let state;
+  let activeId = null;
+  let toastTimer;
+  let canPersist = true;
+  try { const item = localStorage.getItem(KEY); state = item ? C.normalizeState(JSON.parse(item)) : C.newEvent(); }
+  catch (err) { state = C.newEvent(); canPersist = false; }
+  // Older builds contained an unauthorized example tournament. Discard only
+  // that recognizable sample, leaving genuine tournament records untouched.
+  if (state.event.name === 'Кубок северного ветра' &&
+      state.event.sport === 'Тактический биатлон · личный зачёт' &&
+      state.event.place === 'Санкт-Петербург' &&
+      state.participants.length <= 7) {
+    state = C.newEvent();
+    if (canPersist) {
+      try { localStorage.setItem(KEY, JSON.stringify(state)); }
+      catch { canPersist = false; }
+    }
+  }
+
+  function notify(msg) {
+    const el = q('#toast');
+    clearTimeout(toastTimer);
+    el.textContent = msg;
+    el.classList.add('show');
+    toastTimer = setTimeout(() => el.classList.remove('show'), 4000);
+  }
+  function save() {
+    if (canPersist) {
+      try { localStorage.setItem(KEY, JSON.stringify(state)); }
+      catch { canPersist = false; notify('Хранилище недоступно. Скачайте резервную копию JSON.'); }
+    }
+    render();
+  }
+  function go(tab) {
+    qa('.screen').forEach(item => item.classList.toggle('active', item.id === 'screen-' + tab));
+    qa('.nav-link').forEach(item => item.classList.toggle('active', item.dataset.tab === tab));
+    const names = {dashboard:['РАБОЧЕЕ ПРОСТРАНСТВО','Обзор мероприятия'], participants:['РЕЕСТР СПОРТСМЕНОВ','Участники'], results:['ЗАЧЁТНЫЕ ТАБЛИЦЫ','Результаты'], documents:['АРХИВ И ПЕЧАТЬ','Документы']};
+    q('#screenEyebrow').textContent = names[tab][0];
+    q('#screenTitle').textContent = names[tab][1];
+    window.scrollTo({ top:0, behavior:'auto' });
+  }
+  function nextBib() {
+    const taken = new Set(state.participants.map(x => x.bib));
+    let candidate = 1;
+    while (taken.has(candidate)) candidate++;
+    return candidate;
+  }
+  function openDialog(id = null) {
+    activeId = id;
+    const existing = id ? state.participants.find(p => p.id === id) : null;
+    const person = existing || C.normalizePerson({bib:nextBib(),category:'Общий зачёт',name:'',team:'',result:'',status:'OK',penalty:0,paid:false}, state.participants.length);
+    const form = q('#personForm');
+    ['name','bib','category','team','result','penalty','status'].forEach(key => form.elements[key].value = person[key]);
+    form.elements.paid.checked = person.paid;
+    q('#dialogTitle').textContent = existing ? 'Редактирование участника' : 'Новый участник';
+    q('#resultLabel').textContent = state.event.scoring === 'time' ? 'Время (мм:сс.с)' : 'Набранные очки';
+    form.elements.result.placeholder = state.event.scoring === 'time' ? 'Например: 12:35.2' : 'Например: 95.5';
+    q('#personDialog').showModal();
+    form.elements.name.focus();
+  }
+  function editEvent() {
+    const form = q('#eventForm');
+    const next = Object.fromEntries(new FormData(form).entries());
+    const updated = C.normalizeState({...state, event: {...state.event, ...next }});
+    state.event = updated.event;
+    save();
+  }
+  function displayScore(p) {
+    const score = C.evaluate(p, state.event.scoring);
+    return score === null ? (p.status !== 'OK' ? p.status : '—') : (state.event.scoring === 'time' ? C.formatTime(score) : String(score));
+  }
+  function render() {
+    q('#heroName').textContent = state.event.name;
+    q('#heroMeta').textContent = [state.event.date, state.event.place, state.event.sport].filter(Boolean).join(' · ');
+    q('#metricTotal').textContent = state.participants.length;
+    q('#metricFinished').textContent = state.participants.filter(p => C.evaluate(p,state.event.scoring) !== null).length;
+    q('#metricCategories').textContent = new Set(state.participants.map(p => p.category)).size;
+    const numPaid = state.participants.filter(p => p.paid).length;
+    q('#metricFees').textContent = rub(numPaid * state.event.fee);
+    q('#feesSub').textContent = `${numPaid} подтверждено`;
+    for (const [name, value] of Object.entries(state.event)) {
+      const control = q('#eventForm').elements[name];
+      if (control && document.activeElement !== control) control.value = value;
+    }
+    const categories = [...new Set(state.participants.map(p => p.category))].sort((a,b) => a.localeCompare(b,'ru'));
+    const dropdown = q('#participantCategory');
+    const previous = dropdown.value;
+    dropdown.replaceChildren(new Option('Все категории','all'), ...categories.map(v => new Option(v,v)));
+    dropdown.value = categories.includes(previous) ? previous : 'all';
+    q('#categoriesList').replaceChildren(...categories.map(v => { const op = document.createElement('option');op.value=v;return op;}));
+    renderParticipants();
+    renderResults();
+  }
+  function renderParticipants() {
+    const search = q('#participantSearch').value.toLocaleLowerCase('ru').trim();
+    const category = q('#participantCategory').value;
+    const people = state.participants.filter(p => (category === 'all' || p.category === category) && (!search || [p.name,p.team,p.category,String(p.bib)].some(s => s.toLocaleLowerCase('ru').includes(search)))).sort((a,b) => a.bib - b.bib);
+    q('#participantCount').textContent = `${people.length} записей`;
+    q('#participantFooter').textContent = `${people.length} отображено из ${state.participants.length} · Без передачи на сервер`;
+    q('#participantRows').innerHTML = people.length ? people.map(p => `<tr>
+      <td><span class="bib">${p.bib}</span></td><td><strong>${esc(p.name)}</strong>${p.team ? `<small>${esc(p.team)}</small>`:''}</td>
+      <td>${esc(p.category)}</td><td class="result-strong">${esc(displayScore(p))}</td>
+      <td class="${p.paid ? 'paid':'unpaid'}">${p.paid ? '✓ Оплачено':'○ Не оплачено'}</td>
+      <td><div class="row-actions"><button class="mini-action" data-edit="${esc(p.id)}">Изменить</button><button class="mini-action delete" aria-label="Удалить ${esc(p.name)}" data-delete="${esc(p.id)}">✕</button></div></td></tr>`).join('') : `<tr><td class="empty" colspan="6"><strong>${state.participants.length ? 'Никого не найдено' : 'Пока нет участников'}</strong>Добавьте спортсмена вручную или импортируйте таблицу CSV.</td></tr>`;
+  }
+  function renderResults() {
+    const container = q('#resultSections');
+    const sections = C.scoresByCategory(state.participants,state.event.scoring);
+    if (!sections.length) {container.innerHTML = '<div class="panel empty"><strong>Результатов пока нет</strong>Добавьте участников и внесите результаты.</div>';return;}
+    container.innerHTML = sections.map(s => `<article class="panel result-category"><div class="category-header"><h3>${esc(s.category)}</h3><span class="muted">${s.rows.length} участников</span></div><div class="table-wrap"><table><thead><tr><th>МЕСТО</th><th>№</th><th>УЧАСТНИК</th><th>КОМАНДА</th><th>РЕЗУЛЬТАТ С УЧЁТОМ ШТРАФА</th><th>СТАТУС</th></tr></thead><tbody>${s.rows.map(p=>`<tr><td><span class="place-medal ${p.place && p.place <= 3 ? 'winner':''}">${p.place ? p.place + ' МЕСТО' : '—'}</span></td><td>${p.bib}</td><td><strong>${esc(p.name)}</strong></td><td>${esc(p.team||'—')}</td><td><strong class="result-strong">${esc(displayScore(p))}</strong></td><td>${p.status}</td></tr>`).join('')}</tbody></table></div></article>`).join('');
+  }
+  function textFile(name, text, contentType) {
+    const blob = new Blob([text], {type:contentType});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = name;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(href), 30000);
+  }
+  function filePrefix() {
+    return (state.event.name.toLocaleLowerCase('ru').replace(/[^a-zа-яё0-9]+/gi,'_').slice(0,45)||'turnir') + '_' + (state.event.date||'date');
+  }
+  function backup() { textFile(filePrefix() + '_backup.json', JSON.stringify(state,null,2), 'application/json;charset=utf-8');notify('Резервная копия сохранена'); }
+  function exportCsv() { textFile(filePrefix() + '_results.csv', C.exportResults(state), 'text/csv;charset=utf-8'); notify('CSV выгружен'); }
+  function plainPrintProtocol() {
+    const sections = C.scoresByCategory(state.participants, state.event.scoring);
+    if (!sections.length) { notify('Сначала добавьте участников'); return; }
+    q('#printArea').innerHTML = `<div class="print-header"><h1>${esc(state.event.name)}</h1><div>${esc([state.event.sport,state.event.date,state.event.place].filter(Boolean).join(' • '))}</div><h2>Итоговый протокол</h2></div>` + sections.map(section=>`<h2>${esc(section.category)}</h2><table><thead><tr><th>Место</th><th>№</th><th>Участник</th><th>Команда</th><th>Результат</th><th>Статус</th></tr></thead><tbody>${section.rows.map(p=>`<tr><td>${p.place??'—'}</td><td>${p.bib}</td><td>${esc(p.name)}</td><td>${esc(p.team)}</td><td>${esc(displayScore(p))}</td><td>${p.status}</td></tr>`).join('')}</tbody></table>`).join('');
+    window.print();
+  }
+  function printCertificates() {
+    const winners = C.scoresByCategory(state.participants,state.event.scoring).flatMap(s=>s.rows.filter(p=>p.place && p.place <= 3));
+    if (!winners.length) {notify('Нет призёров с действительными результатами');return;}
+    q('#printArea').innerHTML = winners.map(p=>`<article class="cert"><div class="cert-label">${esc(state.event.sport)}</div><div class="cert-title">ДИПЛОМ</div><div class="cert-label">награждается</div><div class="cert-name">${esc(p.name)}</div><div class="cert-category">${p.place}-е место • ${esc(p.category)}</div><div>${esc(state.event.name)}</div><div class="cert-date">${esc([state.event.place,state.event.date].filter(Boolean).join(' • '))}</div></article>`).join('');
+    window.print();
+  }
+  qa('.nav-link').forEach(b=>b.addEventListener('click',()=>go(b.dataset.tab)));
+  qa('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+  ['#addTop','#addParticipant'].forEach(id=>q(id).addEventListener('click',()=>openDialog()));
+  q('#eventForm').addEventListener('change',editEvent);
+  q('#participantSearch').addEventListener('input',renderParticipants);
+  q('#participantCategory').addEventListener('change',renderParticipants);
+  q('#personForm').addEventListener('submit',event=>{
+    event.preventDefault();
+    const form = q('#personForm');
+    const data = Object.fromEntries(new FormData(form).entries());
+    data.paid = form.elements.paid.checked;
+    const number = Number(data.bib);
+    if (!Number.isInteger(number) || number < 1 || number > 999999) {notify('Номер должен быть целым положительным числом');return;}
+    if (state.participants.some(p=>p.bib===number && p.id!==activeId)) {notify('Этот стартовый номер уже занят');return;}
+    const status = String(data.status);
+    if (status==='OK' && data.result && C.evaluate({...data,penalty:Number(data.penalty),status:'OK'},state.event.scoring)===null) {notify('Проверьте формат результата и штрафа');return;}
+    const person = C.normalizePerson({...data,id:activeId},state.participants.length);
+    if (!person.name) {notify('Укажите ФИО');return;}
+    if (!activeId && state.participants.length>=2500) {notify('Достигнут лимит участников');return;}
+    const position = state.participants.findIndex(p=>p.id===activeId);
+    if (position>=0) state.participants[position]=person;
+    else state.participants.push(person);
+    q('#personDialog').close();save();notify(position>=0?'Участник обновлён':'Участник добавлен');
+  });
+  ['#dialogClose','#personCancel'].forEach(id=>q(id).addEventListener('click',()=>q('#personDialog').close()));
+  q('#participantRows').addEventListener('click',event=>{
+    const button = event.target.closest('button');if(!button)return;
+    if(button.dataset.edit)openDialog(button.dataset.edit);
+    else if(button.dataset.delete){const person=state.participants.find(p=>p.id===button.dataset.delete);if(person && confirm(`Удалить «${person.name}» из турнира?`)){state.participants=state.participants.filter(p=>p.id!==person.id);save();notify('Участник удалён');}}
+  });
+  ['#backupSidebar','#backupMain'].forEach(id=>q(id).addEventListener('click',backup));
+  ['#downloadCsv','#exportCsv2'].forEach(id=>q(id).addEventListener('click',exportCsv));
+  ['#printResults','#printProtocol'].forEach(id=>q(id).addEventListener('click',plainPrintProtocol));
+  q('#printCertificates').addEventListener('click',printCertificates);
+  q('#importCsv').addEventListener('click',()=>q('#csvFile').click());
+  q('#csvFile').addEventListener('change',async e=>{
+    const file=e.target.files[0];if(!file)return;
+    try {if(file.size>2_000_000)throw Error('Максимум 2 МБ');
+      const rows=C.importCsv(await file.text(),state.participants);
+      state.participants.push(...rows);save();notify(`Импортировано: ${rows.length}`);
+    }catch(error){notify('Импорт: '+error.message);}
+    e.target.value='';
+  });
+  q('#restoreMain').addEventListener('click',()=>q('#restoreFile').click());
+  q('#restoreFile').addEventListener('change',async e=>{
+    const file=e.target.files[0];if(!file)return;
+    try {if(file.size>5_000_000)throw Error('Максимум 5 МБ');
+      const incoming=C.normalizeState(JSON.parse(await file.text()));
+      if(confirm('Заменить текущие данные содержимым файла?')){state=incoming;save();notify('Резервная копия восстановлена');}
+    }catch(error){notify('Восстановление: '+error.message);}
+    e.target.value='';
+  });
+  q('#resetData').addEventListener('click',()=>{
+    if(confirm('Удалить весь текущий турнир и его участников? Отменить нельзя.')){state=C.newEvent();save();go('dashboard');notify('Создан пустой турнир');}
+  });
+  render();
+  if(!canPersist)notify('Автосохранение недоступно. Используйте резервную копию JSON.');
+})();
+</script>
+</body>
+</html>
