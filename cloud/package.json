@@ -2,7 +2,15 @@
   "name": "startpult-cloud-beta",
   "version": "0.1.0",
   "private": true,
-  "engines": { "node": ">=20" },
-  "scripts": { "start": "node server.js", "test": "node --test tests/*.test.js" },
-  "dependencies": { "pg": "8.16.3" }
+  "engines": {
+    "node": ">=22 <27"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/*.test.js",
+    "postinstall": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "pg": "8.16.3"
+  }
 }
