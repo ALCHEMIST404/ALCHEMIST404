@@ -73,6 +73,17 @@ test('HTTP integration: separate users, saved events, backup, restore, delete ac
       const user=[...users.values()].find(x=>x.id===params[0]);
       return rows(user?[{password_salt:user.password_salt,password_hash:user.password_hash}]:[]);
     }
+    if (sql.startsWith('UPDATE sp_users SET password_salt=')) {
+      const user=[...users.values()].find(x=>x.id===params[2]);
+      if(!user)return rows([]);
+      user.password_salt=params[0];
+      user.password_hash=params[1];
+      return rows([]);
+    }
+    if (sql.startsWith('DELETE FROM sp_sessions WHERE user_id=')) {
+      for(const [key,session] of sessions)if(session.user_id===params[0])sessions.delete(key);
+      return rows([]);
+    }
     if (sql.startsWith('DELETE FROM sp_sessions')) {
       sessions.delete(params[0]);return rows([]);
     }
@@ -168,7 +179,23 @@ test('HTTP integration: separate users, saved events, backup, restore, delete ac
   const noOrigin=await fetch(address+'/api/tournaments',{method:'POST',headers:{Cookie:bob.cookie,'content-type':'application/json'},body:'{}'});
   assert.equal(noOrigin.status,403);
 
-  const deleted=await request('/api/account/delete','POST',{password:'Alice-secret-long-123',confirm:'УДАЛИТЬ'},alice.cookie);
+  const aliceOther=await request('/api/auth/login','POST',{email:'alice@example.test',password:'Alice-secret-long-123'});
+  assert.equal(aliceOther.status,200);
+  const wrongCurrent=await request('/api/account/change-password','POST',{
+    currentPassword:'Wrong-current-123',newPassword:'Alice-new-password-456'
+  },alice.cookie);
+  assert.equal(wrongCurrent.status,401);
+  const rotated=await request('/api/account/change-password','POST',{
+    currentPassword:'Alice-secret-long-123',newPassword:'Alice-new-password-456'
+  },alice.cookie);
+  assert.equal(rotated.status,200);
+  assert.equal(rotated.payload.otherSessionsRevoked,true);
+  assert.notEqual(rotated.cookie,alice.cookie);
+  assert.equal((await request('/api/auth/me','GET',undefined,alice.cookie)).payload.user,null);
+  assert.equal((await request('/api/auth/me','GET',undefined,aliceOther.cookie)).payload.user,null);
+  assert.equal((await request('/api/auth/login','POST',{email:'alice@example.test',password:'Alice-secret-long-123'})).status,401);
+  assert.equal((await request('/api/auth/login','POST',{email:'alice@example.test',password:'Alice-new-password-456'})).status,200);
+  const deleted=await request('/api/account/delete','POST',{password:'Alice-new-password-456',confirm:'УДАЛИТЬ'},rotated.cookie);
   assert.equal(deleted.status,200);
   assert.equal(deleted.payload.deleted,true);
   assert.equal((await request('/api/auth/me','GET',undefined,alice.cookie)).payload.user,null);
