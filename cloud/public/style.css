@@ -52,3 +52,8 @@ input::placeholder{color:#647d96}
 .danger-button{background:#ae4152;color:#fff}
 .danger-button:hover{background:#c95264}
 @media(max-width:600px){.archive-actions{display:grid;grid-template-columns:1fr}.archive-actions .btn{width:100%}.delete-form{padding:20px}.dialog-actions{display:grid;grid-template-columns:1fr 1fr}.dialog-actions .btn{padding:10px}}
+
+.account-security{margin-top:18px}
+.account-security form{display:grid;gap:2px;max-width:470px}
+.account-security label{margin-top:8px}
+.account-security .btn{justify-self:start;margin-top:8px}
