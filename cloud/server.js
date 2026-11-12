@@ -223,6 +223,35 @@ async function api(req,res,url) {
     return response(res,200,{ok:true});
   }
   requireUser(user);
+  if(url.pathname==='/api/account/change-password'&&req.method==='POST'){
+    limit(req,'change-password',8,60*60*1000);
+    const body=await bodyJson(req);
+    const current=validatePassword(body.currentPassword);
+    const replacement=validatePassword(body.newPassword);
+    if(current===replacement)throw httpError(400,'Новый пароль должен отличаться от старого');
+    const client=await pool.connect();
+    try{
+      await client.query('BEGIN');
+      const found=await client.query('SELECT password_salt,password_hash FROM sp_users WHERE id=$1 FOR UPDATE',[user.id]);
+      if(!found.rows.length)throw httpError(401,'Сессия устарела');
+      const oldDigest=await passwordHash(current,found.rows[0].password_salt);
+      if(!crypto.timingSafeEqual(Buffer.from(oldDigest,'hex'),Buffer.from(found.rows[0].password_hash,'hex')))
+        throw httpError(401,'Текущий пароль неверный');
+      const salt=crypto.randomBytes(16).toString('hex');
+      const digest=await passwordHash(replacement,salt);
+      await client.query('UPDATE sp_users SET password_salt=$1,password_hash=$2 WHERE id=$3',[salt,digest,user.id]);
+      await client.query('DELETE FROM sp_sessions WHERE user_id=$1',[user.id]);
+      const token=crypto.randomBytes(32).toString('base64url');
+      await client.query('INSERT INTO sp_sessions(token_hash,user_id,expires_at) VALUES($1,$2,$3)',
+        [hashSession(token),user.id,new Date(Date.now()+SESSION_MS)]);
+      await client.query('COMMIT');
+      setCookie(res,token);
+      return response(res,200,{changed:true,otherSessionsRevoked:true});
+    }catch(error){
+      await client.query('ROLLBACK');
+      throw error;
+    }finally{client.release();}
+  }
   if(url.pathname==='/api/account/export'&&req.method==='GET'){
     const found=await pool.query('SELECT data,created_at,updated_at FROM sp_tournaments WHERE user_id=$1 ORDER BY created_at ASC LIMIT 100',[user.id]);
     const tournaments=found.rows.map(row=>({data:row.data,createdAt:row.created_at,updatedAt:row.updated_at}));
