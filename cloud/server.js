@@ -111,12 +111,12 @@ function limit(req,kind,max,period) {
   if(attempts.size>5000) for(const [k,v] of attempts) if(now>v.expires) attempts.delete(k);
   if(data.count>max) throw httpError(429,'Слишком много попыток. Попробуй позже');
 }
-async function bodyJson(req) {
+async function bodyJson(req,limitBytes=1024*1024) {
   if(!String(req.headers['content-type']||'').startsWith('application/json')) throw httpError(415,'Ожидается JSON');
   let total=0,items=[];
   for await (const chunk of req) {
     total+=chunk.length;
-    if(total>1024*1024) throw httpError(413,'Слишком большой запрос');
+    if(total>limitBytes) throw httpError(413,'Слишком большой запрос');
     items.push(chunk);
   }
   try {
@@ -156,6 +156,20 @@ function normalizeTournament(input) {
   });
   return {version:1,event:{name:title,date,place:str(ev.place,120),
     sport:str(ev.sport,120),scoring,fee},participants};
+}
+
+function normalizeBackup(input) {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) throw httpError(400,'Некорректный архив');
+  let entries;
+  if (input.format === 'startpult-cloud-backup-v1' && Array.isArray(input.tournaments)) {
+    entries = input.tournaments.map(item=>item && item.data);
+  } else if (input.schema === 2 && Array.isArray(input.events)) {
+    entries = input.events.map(item=>item && item.data);
+  } else if (input.version === 1 && input.event && Array.isArray(input.participants)) {
+    entries = [input];
+  } else throw httpError(400,'Неизвестный формат архива');
+  if (!entries.length || entries.length > 100) throw httpError(400,'В архиве должно быть от 1 до 100 турниров');
+  return entries.map(normalizeTournament);
 }
 function blankTournament() {
   return {version:1,event:{name:'Новый турнир',date:new Date().toISOString().slice(0,10),
@@ -208,6 +222,48 @@ async function api(req,res,url) {
     return response(res,200,{ok:true});
   }
   requireUser(user);
+  if(url.pathname==='/api/account/export'&&req.method==='GET'){
+    const found=await pool.query('SELECT data,created_at,updated_at FROM sp_tournaments WHERE user_id=$1 ORDER BY created_at ASC LIMIT 100',[user.id]);
+    const tournaments=found.rows.map(row=>({data:row.data,createdAt:row.created_at,updatedAt:row.updated_at}));
+    return response(res,200,{format:'startpult-cloud-backup-v1',exportedAt:new Date().toISOString(),tournaments});
+  }
+  if(url.pathname==='/api/account/import'&&req.method==='POST'){
+    limit(req,'import',8,60*60*1000);
+    const incoming=await bodyJson(req,8*1024*1024);
+    const data=normalizeBackup(incoming);
+    const client=await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query('SELECT id FROM sp_users WHERE id=$1 FOR UPDATE',[user.id]);
+      const count=await client.query('SELECT count(*)::integer AS total FROM sp_tournaments WHERE user_id=$1',[user.id]);
+      if(count.rows[0].total+data.length>100)throw httpError(409,'После импорта будет больше 100 турниров');
+      for(const item of data) {
+        await client.query('INSERT INTO sp_tournaments(id,user_id,data) VALUES($1,$2,$3::jsonb)',
+          [crypto.randomUUID(),user.id,JSON.stringify(item)]);
+      }
+      await client.query('COMMIT');
+      return response(res,201,{imported:data.length});
+    } catch(error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+  if(url.pathname==='/api/account/delete'&&req.method==='POST'){
+    limit(req,'account-delete',6,60*60*1000);
+    const request=await bodyJson(req);
+    if(request.confirm!=='УДАЛИТЬ')throw httpError(400,'Не подтверждено удаление');
+    const password=validatePassword(request.password);
+    const found=await pool.query('SELECT password_salt,password_hash FROM sp_users WHERE id=$1',[user.id]);
+    if(!found.rows.length)throw httpError(401,'Сессия устарела');
+    const digest=await passwordHash(password,found.rows[0].password_salt);
+    if(!crypto.timingSafeEqual(Buffer.from(digest,'hex'),Buffer.from(found.rows[0].password_hash,'hex')))
+      throw httpError(401,'Неверный пароль');
+    await pool.query('DELETE FROM sp_users WHERE id=$1',[user.id]);
+    setCookie(res,'');
+    return response(res,200,{deleted:true});
+  }
   if(url.pathname==='/api/tournaments'&&req.method==='GET'){
     const found=await pool.query('SELECT id,data,updated_at FROM sp_tournaments WHERE user_id=$1 ORDER BY updated_at DESC LIMIT 100',[user.id]);
     const list=found.rows.map(r=>({id:r.id,name:r.data.event.name,
@@ -277,4 +333,4 @@ async function start(){
   server.listen(PORT,'0.0.0.0',()=>console.log('StartPult cloud beta ready on port '+PORT));
 }
 if(require.main===module)start().catch(err=>{console.error('Unable to start:',err.code||err.message);process.exitCode=1;pool.end().catch(()=>{});});
-module.exports={normalizeTournament,emailValue,validatePassword,passwordHash,hashSession,parseCookies,blankTournament,handler,start};
+module.exports={normalizeTournament,normalizeBackup,emailValue,validatePassword,passwordHash,hashSession,parseCookies,blankTournament,handler,start};
