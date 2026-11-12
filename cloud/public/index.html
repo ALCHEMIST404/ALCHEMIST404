@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1424">
+  <meta name="robots" content="noindex, nofollow">
+  <title>СтартПульт · Облачная бета</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="brand" aria-label="СтартПульт">
+      <span class="brand-mark">⌁</span><span>Старт<span class="brand-light">Пульт</span></span>
+    </a>
+    <span class="beta-tag">ОБЛАЧНАЯ БЕТА</span>
+    <button class="text-button" type="button" id="logout" hidden>Выйти</button>
+  </header>
+  <main class="shell">
+    <aside class="warning">
+      <strong>Тестовая версия, не для реальных данных.</strong>
+      База бесплатная и истекает 12 декабря 2026 года. Не вноси персональные данные настоящих участников и не используй эту версию для проведения реальных соревнований. Перед окончанием теста скачай резервные копии.
+    </aside>
+    <section class="auth panel" id="auth">
+      <div class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</div>
+      <h1 id="authTitle">Вход в СтартПульт</h1>
+      <p class="lead">Турниры сохраняются в базе твоего тестового аккаунта. Здесь нет чужих примеров.</p>
+      <form id="authForm">
+        <label>Email<input type="email" name="email" autocomplete="username" required maxlength="254" placeholder="Email для тестового аккаунта"></label>
+        <label>Пароль<input type="password" name="password" autocomplete="current-password" required minlength="12" maxlength="128" placeholder="Не менее 12 символов"></label>
+        <button class="btn primary wide" id="authSubmit" type="submit">Войти</button>
+      </form>
+      <button type="button" class="switch-auth" id="authSwitch">Нет аккаунта? Зарегистрироваться</button>
+      <p class="small muted">В этой бета-версии ещё нет восстановления пароля и подтверждения email. Для реального запуска это обязательно доработать.</p>
+    </section>
+    <section class="workspace" id="workspace" hidden>
+      <div class="welcome">
+        <div><div class="eyebrow">ТВОЁ ПРОСТРАНСТВО</div><h1 id="hello">Мои турниры</h1><p class="muted" id="userEmail"></p></div>
+        <button class="btn primary" id="newTournament" type="button">+ Новый турнир</button>
+      </div>
+      <section id="listing">
+        <div class="headrow"><h2>Сохранённые турниры</h2><span class="soft">В облаке тестового аккаунта</span></div>
+        <div class="event-grid" id="eventList"></div>
+        <p class="small muted">Создай турнир, добавь участников и результаты. Всё можно открыть после повторного входа в этот аккаунт.</p>
+      </section>
+      <section id="editor" hidden>
+        <div class="editor-top">
+          <button class="back" id="back" type="button">← Все турниры</button>
+          <div class="editor-actions">
+            <span class="save-state" id="saveState" role="status">Сохранено</span>
+            <button class="btn secondary" id="export" type="button">↓ Копия</button>
+            <button class="btn primary" id="save" type="button">Сохранить</button>
+          </div>
+        </div>
+        <div class="editor-grid">
+          <section class="panel event-settings">
+            <div class="eyebrow">ШАГ 1</div><h2>О соревновании</h2>
+            <div class="settings-fields">
+              <label>Название<input id="eventName" maxlength="120" required></label>
+              <label>Дата<input id="eventDate" type="date"></label>
+              <label>Дисциплина<input id="eventSport" maxlength="120"></label>
+              <label>Место<input id="eventPlace" maxlength="120"></label>
+              <label>Как определить победителя?<select id="eventScoring"><option value="time">Меньше время</option><option value="points">Больше баллов</option></select></label>
+              <label>Взнос, ₽<input id="eventFee" type="number" min="0" max="1000000" step="1"></label>
+            </div>
+          </section>
+          <section class="panel participants">
+            <div class="eyebrow">ШАГ 2</div>
+            <div class="headrow"><h2>Участники</h2><button id="addParticipant" class="btn secondary" type="button">+ Добавить</button></div>
+            <p class="small muted">Демонстрационные персонажи не используются. Данные этого теста должны быть вымышленными.</p>
+            <div id="participantList" class="participant-list"></div>
+          </section>
+          <section class="panel results">
+            <div class="eyebrow">ШАГ 3</div><h2>Результаты</h2>
+            <p class="muted small">Введи время в формате 5:30.20 или число баллов. Расчёт мест идёт внутри каждой категории.</p>
+            <div id="resultList" class="result-list"></div>
+          </section>
+        </div>
+        <button type="button" id="deleteTournament" class="delete">Удалить этот турнир</button>
+      </section>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
