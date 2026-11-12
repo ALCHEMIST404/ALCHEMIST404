@@ -43,6 +43,19 @@
         <div class="headrow"><h2>Сохранённые турниры</h2><span class="soft">В облаке тестового аккаунта</span></div>
         <div class="event-grid" id="eventList"></div>
         <p class="small muted">Создай турнир, добавь участников и результаты. Всё можно открыть после повторного входа в этот аккаунт.</p>
+        <section class="panel archive-panel">
+          <div class="eyebrow">СОХРАННОСТЬ ДАННЫХ</div>
+          <h2>Резервные копии</h2>
+          <p class="small muted">Тестовая база истекает 12 декабря 2026 года. Скачай все турниры одним файлом. Восстановление добавляет турниры, не удаляя существующие.</p>
+          <div class="archive-actions">
+            <button id="exportAll" type="button" class="btn secondary">↓ Скачать все турниры</button>
+            <button id="importAll" type="button" class="btn secondary">↑ Восстановить из файла</button>
+            <input id="importAllFile" type="file" accept=".json,application/json" hidden>
+          </div>
+        </section>
+        <section class="account-danger">
+          <button id="showDeleteAccount" type="button" class="delete">Удалить тестовый аккаунт и все его данные</button>
+        </section>
       </section>
       <section id="editor" hidden>
         <div class="editor-top">
@@ -81,6 +94,18 @@
       </section>
     </section>
   </main>
+  <dialog id="deleteAccountDialog" class="delete-dialog" aria-labelledby="deleteTitle">
+    <form id="deleteAccountForm" class="delete-form">
+      <h2 id="deleteTitle">Удалить тестовый аккаунт?</h2>
+      <p class="small">Это удалит вход, все турниры и результаты. Сначала скачай резервную копию. Действие необратимо.</p>
+      <label>Текущий пароль<input type="password" name="password" autocomplete="current-password" minlength="12" maxlength="128" required></label>
+      <label>Для подтверждения напиши УДАЛИТЬ<input type="text" name="phrase" autocomplete="off" required></label>
+      <div class="dialog-actions">
+        <button type="button" id="cancelDeleteAccount" class="btn secondary">Отмена</button>
+        <button type="submit" id="confirmDeleteAccount" class="btn danger-button">Удалить аккаунт</button>
+      </div>
+    </form>
+  </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>
