@@ -2,7 +2,7 @@
 
 (function () {
   const $=id=>document.getElementById(id);
-  const state={user:null,list:[],id:null,data:null,register:false,dirty:false,saving:false,timer:null};
+  const state={user:null,list:[],id:null,data:null,revision:null,conflict:false,register:false,dirty:false,saving:false,timer:null};
   function node(tag,cls,text){
     const el=document.createElement(tag);
     if(cls)el.className=cls;
@@ -18,7 +18,7 @@
     }catch{throw Error('Нет соединения с сервером. Проверь интернет.');}
     let json;
     try{json=await res.json();}catch{throw Error('Сервер вернул неожиданный ответ');}
-    if(!res.ok)throw Error(json.error||'Ошибка сервера '+res.status);
+    if(!res.ok){const err=Error(json.error||'Ошибка сервера '+res.status);err.status=res.status;err.revision=json.revision;throw err;}
     return json;
   }
   let toastTimeout;
@@ -83,10 +83,10 @@
   }
   function markDirty(renderResults=false){
     state.dirty=true;
-    saveStatus('Не сохранено',false);
+    saveStatus(state.conflict?'Есть конфликт. Скачай копию и обнови турнир.':'Не сохранено',false);
     if(renderResults)drawResults();
     clearTimeout(state.timer);
-    state.timer=setTimeout(()=>save().catch(e=>toast(e.message)),1200);
+    if(!state.conflict)state.timer=setTimeout(()=>save().catch(e=>toast(e.message)),1200);
   }
   function fieldsToState(){
     const event=state.data.event;
@@ -99,7 +99,9 @@
   }
   async function save(){
     clearTimeout(state.timer);
-    if(!state.id||!state.dirty||state.saving)return true;
+    if(state.saving||state.conflict)return false;
+    if(!state.id)return false;
+    if(!state.dirty)return true;
     fieldsToState();
     if(state.data.event.name.trim().length<2){saveStatus('Укажи название турнира',false);return false;}
     state.saving=true;
@@ -107,7 +109,8 @@
     saveStatus('Сохраняю...');
     const payload=JSON.stringify(state.data);
     try{
-      const response=await api('/api/tournaments/'+state.id,'PUT',{data:state.data});
+      const response=await api('/api/tournaments/'+state.id,'PUT',{data:state.data,revision:state.revision});
+      state.revision=response.revision;
       if(payload===JSON.stringify(state.data)) {
         state.dirty=false;
         saveStatus('Сохранено в облаке');
@@ -117,30 +120,54 @@
       }
       return Boolean(response.id);
     }catch(e){
-      saveStatus('Ошибка сохранения',false);
-      toast(e.message);
+      if(e.status===409){
+        state.conflict=true;
+        $('reloadServer').hidden=false;
+        saveStatus('Конфликт: изменения на другом устройстве',false);
+        toast('Сохранение остановлено. Скачай локальную копию, затем обнови данные с сервера.');
+      } else{
+        saveStatus('Ошибка сохранения',false);
+        toast(e.message);
+      }
       return false;
     }finally{
       state.saving=false;
       $('save').disabled=false;
     }
   }
+  async function reloadAfterConflict(){
+    if(!state.conflict||!state.id)return;
+    if(!confirm('Скачать несохранённые изменения отдельным файлом и загрузить актуальный турнир с сервера?'))return;
+    exportCurrent();
+    const id=state.id;
+    try{
+      const latest=await api('/api/tournaments/'+id);
+      clearTimeout(state.timer);
+      state.dirty=false;
+      state.conflict=false;
+      state.id=null;
+      $('reloadServer').hidden=true;
+      await openTournament(id,latest);
+      toast('Актуальная версия загружена. Твоя локальная копия скачана в JSON.');
+    }catch(error){toast('Не удалось загрузить свежие данные: '+error.message);}
+  }
   async function leaveEditor(){
     if(state.dirty){
       const ok=await save();
       if(!ok||state.dirty){toast('Не удалось сохранить изменения. Останься в турнире и скачай копию.');return;}
     }
-    state.id=null;state.data=null;
+    state.id=null;state.data=null;state.revision=null;state.conflict=false;
     $('editor').hidden=true;$('listing').hidden=false;
     await loadList();
   }
-  async function openTournament(id){
+  async function openTournament(id,preloaded){
     if(state.dirty){
       const ok=await save();
       if(!ok||state.dirty)return;
     }
-    const opened=await api('/api/tournaments/'+id);
-    state.id=id;state.data=opened.data;state.dirty=false;
+    const opened=preloaded||await api('/api/tournaments/'+id);
+    state.id=id;state.data=opened.data;state.revision=opened.revision;state.conflict=false;state.dirty=false;
+    $('reloadServer').hidden=true;
     $('listing').hidden=true;$('editor').hidden=false;
     const ev=opened.data.event;
     $('eventName').value=ev.name||'';
@@ -374,6 +401,7 @@
     });
     $('back').addEventListener('click',()=>leaveEditor().catch(e=>toast(e.message)));
     $('save').addEventListener('click',()=>save().then(ok=>{if(ok)toast('Турнир сохранён');}).catch(e=>toast(e.message)));
+    $('reloadServer').addEventListener('click',()=>reloadAfterConflict().catch(e=>toast(e.message)));
     $('export').addEventListener('click',exportCurrent);
     $('addParticipant').addEventListener('click',()=>{
       const people=state.data.participants;
@@ -390,6 +418,10 @@
       $(name).addEventListener(eventType,()=>{fieldsToState();markDirty(name==='eventScoring');});
     }
     $('deleteTournament').addEventListener('click',async()=>{
+      if(state.dirty){
+        const ok=await save();
+        if(!ok||state.dirty){toast('Сначала сохрани изменения или скачай локальную копию');return;}
+      }
       if(!confirm('Удалить этот турнир и всех его участников без возможности восстановления?'))return;
       try{
         clearTimeout(state.timer);
