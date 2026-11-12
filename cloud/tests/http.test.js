@@ -38,12 +38,12 @@ test('HTTP integration: separate users, saved events, backup, restore, delete ac
     }
     if (sql.startsWith('INSERT INTO sp_tournaments')) {
       const [id,user_id,data] = params;
-      tournaments.set(id,{id,user_id,data:JSON.parse(data),created_at:now(),updated_at:now()});
-      return rows(sql.includes('RETURNING updated_at')?[{updated_at:tournaments.get(id).updated_at}]:[]);
+      tournaments.set(id,{id,user_id,data:JSON.parse(data),revision:1,created_at:now(),updated_at:now()});
+      return rows(sql.includes('RETURNING updated_at')?[{updated_at:tournaments.get(id).updated_at,revision:1}]:[]);
     }
     if (sql.startsWith('SELECT id,data,updated_at FROM sp_tournaments WHERE user_id=')) {
       return rows([...tournaments.values()].filter(x=>x.user_id===params[0]).map(x=>({
-        id:x.id,data:x.data,updated_at:x.updated_at
+        id:x.id,data:x.data,updated_at:x.updated_at,revision:x.revision
       })));
     }
     if (sql.startsWith('SELECT data,created_at,updated_at FROM sp_tournaments WHERE user_id=')) {
@@ -53,13 +53,17 @@ test('HTTP integration: separate users, saved events, backup, restore, delete ac
     }
     if (sql.startsWith('SELECT data,updated_at FROM sp_tournaments WHERE id=')) {
       const event=tournaments.get(params[0]);
-      return rows(event && event.user_id===params[1]?[{data:event.data,updated_at:event.updated_at}]:[]);
+      return rows(event && event.user_id===params[1]?[{data:event.data,updated_at:event.updated_at,revision:event.revision}]:[]);
     }
     if (sql.startsWith('UPDATE sp_tournaments SET')) {
       const event=tournaments.get(params[1]);
-      if(!event || event.user_id!==params[2])return rows([]);
-      event.data=JSON.parse(params[0]);event.updated_at=now();
-      return rows([{updated_at:event.updated_at}]);
+      if(!event || event.user_id!==params[2] || event.revision!==params[3])return rows([]);
+      event.data=JSON.parse(params[0]);event.updated_at=now();event.revision++;
+      return rows([{updated_at:event.updated_at,revision:event.revision}]);
+    }
+    if (sql.startsWith('SELECT revision FROM sp_tournaments WHERE id=')) {
+      const event=tournaments.get(params[0]);
+      return rows(event && event.user_id===params[1]?[{revision:event.revision}]:[]);
     }
     if (sql.startsWith('SELECT id FROM sp_users WHERE id=')) {
       const user=[...users.values()].find(x=>x.id===params[0]);
@@ -130,8 +134,14 @@ test('HTTP integration: separate users, saved events, backup, restore, delete ac
   const event=created.payload.data;
   event.event.name='Тестовый марафон';
   event.participants=[{bib:1,name:'Тестовый участник',category:'Общий зачёт',result:'05:12.00'}];
-  const updated=await request('/api/tournaments/'+aliceId,'PUT',{data:event},alice.cookie);
+  const updated=await request('/api/tournaments/'+aliceId,'PUT',{data:event,revision:created.payload.revision},alice.cookie);
   assert.equal(updated.status,200);
+  assert.equal(updated.payload.revision,2);
+  const stale=await request('/api/tournaments/'+aliceId,'PUT',{data:event,revision:1},alice.cookie);
+  assert.equal(stale.status,409);
+  assert.equal(stale.payload.revision,2);
+  const malformed=await request('/api/tournaments/'+aliceId,'PUT',{data:event},alice.cookie);
+  assert.equal(malformed.status,400);
   const loaded=await request('/api/tournaments/'+aliceId,'GET',undefined,alice.cookie);
   assert.equal(loaded.payload.data.event.name,'Тестовый марафон');
   assert.equal(loaded.payload.data.participants.length,1);
@@ -142,7 +152,7 @@ test('HTTP integration: separate users, saved events, backup, restore, delete ac
 
   const bob=await register('bob@example.test','Bob-secret-long-1234');
   assert.equal((await request('/api/tournaments/'+aliceId,'GET',undefined,bob.cookie)).status,404);
-  assert.equal((await request('/api/tournaments/'+aliceId,'PUT',{data:event},bob.cookie)).status,404);
+  assert.equal((await request('/api/tournaments/'+aliceId,'PUT',{data:event,revision:2},bob.cookie)).status,404);
   assert.equal((await request('/api/tournaments/'+aliceId,'DELETE',{},bob.cookie)).status,404);
   assert.equal((await request('/api/account/export','GET',undefined,bob.cookie)).payload.tournaments.length,0);
 
