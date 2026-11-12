@@ -270,17 +270,44 @@
       list.append(item);
     }
   }
+  function downloadJson(name,data){
+    const text=JSON.stringify(data,null,2);
+    const blob=new Blob([text],{type:'application/json;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const link=node('a');
+    link.href=url;link.download=name;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+  }
   function exportCurrent(){
     if(!state.data)return;
     fieldsToState();
-    const text=JSON.stringify(state.data,null,2);
-    const blob=new Blob([text],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const link=node('a');
-    link.href=url;link.download='startpult_tournament_backup.json';
-    link.click();
-    setTimeout(()=>URL.revokeObjectURL(url),1500);
+    downloadJson('startpult_tournament_backup.json',state.data);
+    toast('Копия турнира скачана');
   }
+  async function exportAll(){
+    const result=await api('/api/account/export');
+    const date=new Date().toISOString().slice(0,10);
+    downloadJson('startpult_all_tournaments_'+date+'.json',result);
+    toast('Скачана копия всех турниров: '+result.tournaments.length);
+  }
+  async function importAll(file){
+    if(!file) return;
+    if(file.size>8*1024*1024) throw Error('Архив больше 8 МБ. Выбери файл поменьше.');
+    let data;
+    try{data=JSON.parse(await file.text());}
+    catch {throw Error('Файл не является корректным JSON-архивом');}
+    const count=Array.isArray(data.tournaments)?data.tournaments.length:
+      Array.isArray(data.events)?data.events.length: (data.event && data.participants?1:0);
+    if(!count||count>100)throw Error('Неизвестный формат или слишком много турниров');
+    if(!confirm('Добавить '+count+' турнир(ов) из файла? Текущие турниры сохранятся.'))return;
+    const result=await api('/api/account/import','POST',data);
+    await loadList();
+    toast('Восстановлено турниров: '+result.imported);
+  }
+
   function bind(){
     $('authSwitch').addEventListener('click',()=>{state.register=!state.register;setMode();});
     $('authForm').addEventListener('submit',async event=>{
@@ -294,6 +321,44 @@
       }catch(e){toast(e.message);}
       finally{button.disabled=false;}
     });
+    $('exportAll').addEventListener('click',async()=>{
+      const button=$('exportAll');button.disabled=true;
+      try{if(state.dirty){const ok=await save();if(!ok||state.dirty)return;}await exportAll();}
+      catch(e){toast(e.message);}
+      finally{button.disabled=false;}
+    });
+    $('importAll').addEventListener('click',()=>$('importAllFile').click());
+    $('importAllFile').addEventListener('change',async event=>{
+      const file=event.target.files[0];
+      try{await importAll(file);}
+      catch(e){toast(e.message);}
+      finally{event.target.value='';}
+    });
+    $('showDeleteAccount').addEventListener('click',()=>$('deleteAccountDialog').showModal());
+    $('cancelDeleteAccount').addEventListener('click',()=>{
+      $('deleteAccountDialog').close();$('deleteAccountForm').reset();
+    });
+    $('deleteAccountForm').addEventListener('submit',async event=>{
+      event.preventDefault();
+      const form=$('deleteAccountForm');
+      if(form.elements.phrase.value.trim()!=='УДАЛИТЬ'){
+        toast('Для удаления напиши точно УДАЛИТЬ');return;
+      }
+      const button=$('confirmDeleteAccount');button.disabled=true;
+      try{
+        await api('/api/account/delete','POST',{
+          password:form.elements.password.value,confirm:'УДАЛИТЬ'
+        });
+        clearTimeout(state.timer);
+        state.user=null;state.id=null;state.data=null;state.list=[];state.dirty=false;
+        $('editor').hidden=true;$('listing').hidden=false;
+        $('eventList').replaceChildren();
+        form.reset();$('deleteAccountDialog').close();
+        $('authForm').reset();state.register=false;setMode();setAuth();
+        toast('Тестовый аккаунт и его турниры удалены');
+      } catch(e){toast(e.message);}
+      finally{button.disabled=false;}
+    });
     $('logout').addEventListener('click',async()=>{
       if(state.dirty){const ok=await save();if(!ok||state.dirty)return;}
       try{await api('/api/auth/logout','POST',{});}catch(e){toast(e.message);return;}
@@ -301,6 +366,7 @@
     });
     $('newTournament').addEventListener('click',async()=>{
       try{
+        if(state.dirty){const ok=await save();if(!ok||state.dirty)return;}
         const data=await api('/api/tournaments','POST',{});
         await openTournament(data.id);
         $('eventName').focus();
@@ -320,7 +386,8 @@
       $('participantList').lastElementChild?.scrollIntoView({behavior:'smooth',block:'nearest'});
     });
     for(const name of ['eventName','eventDate','eventSport','eventPlace','eventScoring','eventFee']){
-      $(name).addEventListener('change',()=>{fieldsToState();markDirty(name==='eventScoring');});
+      const eventType=['eventDate','eventScoring'].includes(name)?'change':'input';
+      $(name).addEventListener(eventType,()=>{fieldsToState();markDirty(name==='eventScoring');});
     }
     $('deleteTournament').addEventListener('click',async()=>{
       if(!confirm('Удалить этот турнир и всех его участников без возможности восстановления?'))return;
