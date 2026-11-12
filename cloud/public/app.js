@@ -361,6 +361,26 @@
       catch(e){toast(e.message);}
       finally{event.target.value='';}
     });
+    $('changePasswordForm').addEventListener('submit',async event=>{
+      event.preventDefault();
+      const form=$('changePasswordForm');
+      const current=form.elements.currentPassword.value;
+      const next=form.elements.newPassword.value;
+      if(next!==form.elements.repeatPassword.value){
+        toast('Новые пароли не совпадают');return;
+      }
+      if(current===next){toast('Новый пароль должен отличаться от старого');return;}
+      const button=$('changePasswordButton');
+      button.disabled=true;
+      try{
+        const out=await api('/api/account/change-password','POST',{
+          currentPassword:current,newPassword:next
+        });
+        form.reset();
+        if(out.changed)toast('Пароль изменён. Другие устройства вышли из аккаунта.');
+      }catch(e){toast(e.message);}
+      finally{button.disabled=false;}
+    });
     $('showDeleteAccount').addEventListener('click',()=>$('deleteAccountDialog').showModal());
     $('cancelDeleteAccount').addEventListener('click',()=>{
       $('deleteAccountDialog').close();$('deleteAccountForm').reset();
