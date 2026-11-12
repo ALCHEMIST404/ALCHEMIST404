@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0a1424">
+  <meta name="theme-color" content="#f5f7fc">
   <meta name="robots" content="noindex, nofollow">
   <title>СтартПульт · Облачная бета</title>
   <link rel="stylesheet" href="/style.css">
@@ -19,11 +19,37 @@
   </header>
   <main class="shell">
     <aside class="warning">
-      <strong>Тестовая версия, не для реальных данных.</strong>
-      База бесплатная и истекает 12 декабря 2026 года. Не вноси персональные данные настоящих участников и не используй эту версию для проведения реальных соревнований. Перед окончанием теста скачай резервные копии.
+      <strong>◌ Тестовая версия.</strong> База действует до 12 декабря 2026 года. Не вводи реальные персональные данные участников. Для сохранности используй резервные копии.
     </aside>
-    <section class="auth panel" id="auth">
-      <div class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</div>
+    <section class="auth-layout" id="auth">
+      <div class="auth-showcase">
+        <div class="hero-kicker"><span class="kicker-dot"></span> ПЛАТФОРМА ДЛЯ ОРГАНИЗАТОРОВ</div>
+        <h1 class="hero-heading">Каждый старт.<br><span>Под контролем.</span></h1>
+        <p class="hero-copy">Собери участников, запиши результаты и подготовь итоговый протокол. Без бесконечных таблиц и лишнего хаоса.</p>
+        <div class="feature-chips">
+          <span>✦ Все турниры в одном месте</span>
+          <span>✦ Результаты по категориям</span>
+          <span>✦ Резервные копии</span>
+        </div>
+        <div class="hero-preview" aria-label="Иллюстрация возможностей">
+          <div class="preview-top"><span><span class="preview-symbol">▧</span> Обзор соревнования</span><span class="preview-label">МАКЕТ</span></div>
+          <div class="preview-metrics">
+            <div><small>Участники</small><strong>24</strong></div>
+            <div><small>Финишировали</small><strong>18</strong></div>
+            <div><small>Категории</small><strong>3</strong></div>
+          </div>
+          <div class="preview-lines">
+            <div><span class="place-icon">01</span><span class="preview-line-long"></span><span class="preview-line-short"></span></div>
+            <div><span class="place-icon">02</span><span class="preview-line-long"></span><span class="preview-line-short"></span></div>
+            <div><span class="place-icon">03</span><span class="preview-line-long"></span><span class="preview-line-short"></span></div>
+          </div>
+          <div class="preview-foot">Схематичная иллюстрация, не реальные результаты</div>
+        </div>
+        <p class="showcase-footer">СТАРТПУЛЬТ <span>© 2026 · CLOUD BETA</span></p>
+      </div>
+      <div class="auth-card panel">
+        <div class="auth-icon" aria-hidden="true">✳</div>
+        <div class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</div>
       <h1 id="authTitle">Вход в СтартПульт</h1>
       <p class="lead">Турниры сохраняются в базе твоего тестового аккаунта. Здесь нет чужих примеров.</p>
       <form id="authForm">
@@ -32,15 +58,16 @@
         <button class="btn primary wide" id="authSubmit" type="submit">Войти</button>
       </form>
       <button type="button" class="switch-auth" id="authSwitch">Нет аккаунта? Зарегистрироваться</button>
-      <p class="small muted">В этой бета-версии ещё нет восстановления пароля и подтверждения email. Для реального запуска это обязательно доработать.</p>
+      <p class="small muted auth-footnote">Пока нет восстановления пароля и подтверждения email. Используй тестовый пароль, не основной.</p>
+      </div>
     </section>
     <section class="workspace" id="workspace" hidden>
       <div class="welcome">
-        <div><div class="eyebrow">ТВОЁ ПРОСТРАНСТВО</div><h1 id="hello">Мои турниры</h1><p class="muted" id="userEmail"></p></div>
+        <div><div class="eyebrow">ТВОЁ ПРОСТРАНСТВО / ОБЗОР</div><h1 id="hello">Мои соревнования<span class="title-dot">.</span></h1><p class="muted" id="userEmail"></p></div>
         <button class="btn primary" id="newTournament" type="button">+ Новый турнир</button>
       </div>
       <section id="listing">
-        <div class="headrow"><h2>Сохранённые турниры</h2><span class="soft">В облаке тестового аккаунта</span></div>
+        <div class="headrow"><div><div class="eyebrow">ВАШИ СОБЫТИЯ</div><h2>Сохранённые турниры</h2></div><span class="soft">☁ В облаке тестового аккаунта</span></div>
         <div class="event-grid" id="eventList"></div>
         <p class="small muted">Создай турнир, добавь участников и результаты. Всё можно открыть после повторного входа в этот аккаунт.</p>
         <section class="panel archive-panel">
