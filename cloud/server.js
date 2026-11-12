@@ -27,7 +27,8 @@ const SCHEMA = [
   'CREATE TABLE IF NOT EXISTS sp_sessions (token_hash TEXT PRIMARY KEY, user_id UUID NOT NULL REFERENCES sp_users(id) ON DELETE CASCADE, expires_at TIMESTAMPTZ NOT NULL)',
   'CREATE INDEX IF NOT EXISTS sp_sessions_user_idx ON sp_sessions(user_id)',
   'CREATE TABLE IF NOT EXISTS sp_tournaments (id UUID PRIMARY KEY, user_id UUID NOT NULL REFERENCES sp_users(id) ON DELETE CASCADE, data JSONB NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now())',
-  'CREATE INDEX IF NOT EXISTS sp_tournaments_user_idx ON sp_tournaments(user_id, updated_at DESC)'
+  'CREATE INDEX IF NOT EXISTS sp_tournaments_user_idx ON sp_tournaments(user_id, updated_at DESC)',
+  'ALTER TABLE sp_tournaments ADD COLUMN IF NOT EXISTS revision BIGINT NOT NULL DEFAULT 1'
 ];
 
 function httpError(status, message) {
@@ -265,9 +266,9 @@ async function api(req,res,url) {
     return response(res,200,{deleted:true});
   }
   if(url.pathname==='/api/tournaments'&&req.method==='GET'){
-    const found=await pool.query('SELECT id,data,updated_at FROM sp_tournaments WHERE user_id=$1 ORDER BY updated_at DESC LIMIT 100',[user.id]);
+    const found=await pool.query('SELECT id,data,updated_at,revision FROM sp_tournaments WHERE user_id=$1 ORDER BY updated_at DESC LIMIT 100',[user.id]);
     const list=found.rows.map(r=>({id:r.id,name:r.data.event.name,
-      date:r.data.event.date,participants:r.data.participants.length,updatedAt:r.updated_at}));
+      date:r.data.event.date,participants:r.data.participants.length,updatedAt:r.updated_at,revision:Number(r.revision)}));
     return response(res,200,{tournaments:list});
   }
   if(url.pathname==='/api/tournaments'&&req.method==='POST'){
@@ -277,23 +278,31 @@ async function api(req,res,url) {
     const body=await bodyJson(req);
     const data=normalizeTournament(body.data||blankTournament());
     const id=crypto.randomUUID();
-    const found=await pool.query('INSERT INTO sp_tournaments(id,user_id,data) VALUES($1,$2,$3::jsonb) RETURNING updated_at',
+    const found=await pool.query('INSERT INTO sp_tournaments(id,user_id,data) VALUES($1,$2,$3::jsonb) RETURNING updated_at,revision',
       [id,user.id,JSON.stringify(data)]);
-    return response(res,201,{id,data,updatedAt:found.rows[0].updated_at});
+    return response(res,201,{id,data,updatedAt:found.rows[0].updated_at,revision:Number(found.rows[0].revision)});
   }
   const tid=idFromPath(url.pathname);
   if(tid&&req.method==='GET'){
-    const found=await pool.query('SELECT data,updated_at FROM sp_tournaments WHERE id=$1 AND user_id=$2',[tid,user.id]);
+    const found=await pool.query('SELECT data,updated_at,revision FROM sp_tournaments WHERE id=$1 AND user_id=$2',[tid,user.id]);
     if(!found.rows.length)throw httpError(404,'Турнир не найден');
-    return response(res,200,{id:tid,data:found.rows[0].data,updatedAt:found.rows[0].updated_at});
+    return response(res,200,{id:tid,data:found.rows[0].data,updatedAt:found.rows[0].updated_at,revision:Number(found.rows[0].revision)});
   }
   if(tid&&req.method==='PUT'){
     const incoming=await bodyJson(req);
+    const revision=incoming.revision;
+    if(!Number.isSafeInteger(revision) || revision<1)
+      throw httpError(400,'Отсутствует версия турнира. Перезагрузи его перед сохранением');
     const data=normalizeTournament(incoming.data);
-    const found=await pool.query('UPDATE sp_tournaments SET data=$1::jsonb,updated_at=now() WHERE id=$2 AND user_id=$3 RETURNING updated_at',
-      [JSON.stringify(data),tid,user.id]);
-    if(!found.rows.length)throw httpError(404,'Турнир не найден');
-    return response(res,200,{id:tid,data,updatedAt:found.rows[0].updated_at});
+    const found=await pool.query(
+      'UPDATE sp_tournaments SET data=$1::jsonb,updated_at=now(),revision=revision+1 WHERE id=$2 AND user_id=$3 AND revision=$4 RETURNING updated_at,revision',
+      [JSON.stringify(data),tid,user.id,revision]);
+    if(!found.rows.length){
+      const current=await pool.query('SELECT revision FROM sp_tournaments WHERE id=$1 AND user_id=$2',[tid,user.id]);
+      if(!current.rows.length)throw httpError(404,'Турнир не найден');
+      return response(res,409,{error:'Турнир изменён на другом устройстве. Скачай локальную копию и загрузи свежую версию.',revision:Number(current.rows[0].revision)});
+    }
+    return response(res,200,{id:tid,data,updatedAt:found.rows[0].updated_at,revision:Number(found.rows[0].revision)});
   }
   if(tid&&req.method==='DELETE'){
     const found=await pool.query('DELETE FROM sp_tournaments WHERE id=$1 AND user_id=$2 RETURNING id',[tid,user.id]);
