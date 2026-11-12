@@ -11,7 +11,22 @@
 .sidebar-bottom .ghost{white-space:normal;line-height:1.3;padding:11px 9px;font-size:11px}
 </style>
 
-<style>.intro-guide{background:linear-gradient(135deg,#173d4e,#17243e);border:1px solid #456579;border-radius:20px;padding:27px;margin-bottom:22px;color:#e6f6ff}.intro-guide .intro-kicker{font-size:11px;font-weight:800;letter-spacing:.15em;color:#9cead7}.intro-guide h2{font-size:clamp(26px,4vw,39px);letter-spacing:-.04em;line-height:1.15;margin:12px 0}.intro-guide p{color:#bfcedf;line-height:1.7;max-width:760px}.intro-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:21px 0}.intro-actions button{border:1px solid #496581;background:#152a42;border-radius:12px;text-align:left;padding:18px;color:#e8f6ff;white-space:normal;font-weight:800}.intro-actions button small{display:block;font-weight:400;margin-top:7px;color:#acc3d5}.intro-guide .intro-fine{font-size:12px;margin:0}@media(max-width:750px){.intro-guide{padding:20px}.intro-actions{grid-template-columns:1fr}}</style></head>
+<style>.intro-guide{background:linear-gradient(135deg,#173d4e,#17243e);border:1px solid #456579;border-radius:20px;padding:27px;margin-bottom:22px;color:#e6f6ff}.intro-guide .intro-kicker{font-size:11px;font-weight:800;letter-spacing:.15em;color:#9cead7}.intro-guide h2{font-size:clamp(26px,4vw,39px);letter-spacing:-.04em;line-height:1.15;margin:12px 0}.intro-guide p{color:#bfcedf;line-height:1.7;max-width:760px}.intro-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:21px 0}.intro-actions button{border:1px solid #496581;background:#152a42;border-radius:12px;text-align:left;padding:18px;color:#e8f6ff;white-space:normal;font-weight:800}.intro-actions button small{display:block;font-weight:400;margin-top:7px;color:#acc3d5}.intro-guide .intro-fine{font-size:12px;margin:0}@media(max-width:750px){.intro-guide{padding:20px}.intro-actions{grid-template-columns:1fr}}</style><style id="tournament-style">
+.tournament-panel{padding:22px 24px;margin-bottom:20px;border:1px solid #3b5974;border-radius:18px;background:linear-gradient(135deg,#152c44,#0f1c31)}
+.tournament-head{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.tournament-head h2{font-size:24px;letter-spacing:-.035em;margin:6px 0 3px}
+.tournament-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px;margin:18px 0}
+.tournament-row{display:flex;align-items:stretch;gap:8px;padding:7px;border:1px solid #34516b;border-radius:13px;background:#101f35}
+.tournament-row.current{border-color:#83e6d6}
+.tournament-select{flex:1;background:transparent;border:0;color:#e8f4ff;text-align:left;padding:8px;min-width:0}
+.tournament-select strong{display:block;font-size:14px;overflow-wrap:anywhere}
+.tournament-select small{display:block;color:#a6bed1;margin-top:7px;font-size:11px;line-height:1.5}
+.tournament-remove{border:0;background:transparent;color:#e3a9b1;font-size:11px;padding:8px}
+.tournament-toolbar{display:flex;gap:10px;flex-wrap:wrap}
+.tournament-warning{margin-top:16px!important;font-size:12px!important;line-height:1.55!important}
+@media(max-width:700px){.tournament-panel{padding:17px}.tournament-head h2{font-size:21px}.tournament-head .primary{width:100%}.tournament-list{grid-template-columns:1fr}}
+</style>
+</head>
 <body>
   <div class="app-shell">
     <aside class="sidebar">
@@ -28,6 +43,16 @@
     <main class="main">
       <header class="topbar"><div><span class="eyebrow" id="screenEyebrow">РАБОЧЕЕ ПРОСТРАНСТВО</span><h1 id="screenTitle">Обзор мероприятия</h1></div><div class="top-actions"><button id="addTop" class="primary">+ Участник</button></div></header>
       <section class="screen active" id="screen-dashboard" aria-label="Обзор">
+        <section class="tournament-panel" aria-label="Сохранённые турниры">
+          <div class="tournament-head"><div><div class="eyebrow">МОИ ТУРНИРЫ</div><h2>Сохранённые соревнования</h2><p id="tournamentCount" class="muted"></p></div><button type="button" id="newTournament" class="primary">+ Новый турнир</button></div>
+          <div id="tournamentList" class="tournament-list"></div>
+          <div class="tournament-toolbar">
+            <button type="button" id="backupAll" class="ghost">↓ Скачать все турниры</button>
+            <button type="button" id="restoreAll" class="ghost">↑ Восстановить все из файла</button>
+            <input id="restoreAllFile" type="file" accept=".json,application/json" hidden>
+          </div>
+          <p class="muted tournament-warning">Автосохранение работает только в этом браузере на этом устройстве. Для переноса на другой телефон или компьютер скачай файл со всеми турнирами и восстанови его там. Удаление данных браузера удалит локальные турниры.</p>
+        </section>
         <div class="hero"><div class="hero-content"><span class="hero-chip">EVENT CONTROL SYSTEM <span class="dot"></span> READY</span><h2 id="heroName">Новый турнир</h2><p id="heroMeta">Создайте мероприятие и добавьте участников</p><button class="hero-button" data-go="participants">Открыть стартовый список <span>↗</span></button></div><div class="hero-art" aria-hidden="true"><div class="ring one"></div><div class="ring two"></div><div class="ring three"></div><div class="hero-big">01</div></div></div>
         <div class="metrics"><article class="metric"><small>ЗАРЕГИСТРИРОВАНО</small><strong id="metricTotal">0</strong><span>участников</span></article><article class="metric"><small>ПОЛУЧЕНЫ РЕЗУЛЬТАТЫ</small><strong id="metricFinished">0</strong><span>с результатом</span></article><article class="metric"><small>КАТЕГОРИИ</small><strong id="metricCategories">0</strong><span>зачётных групп</span></article><article class="metric"><small>ПОДТВЕРЖДЁННЫЕ ВЗНОСЫ</small><strong id="metricFees">0 ₽</strong><span id="feesSub">0 оплат</span></article></div>
         <section class="panel"><div class="panel-heading"><div><div class="eyebrow">КОНФИГУРАЦИЯ</div><h3>Параметры мероприятия</h3></div><span class="muted">Сохраняются автоматически</span></div><form id="eventForm" class="form-grid"><label>Название соревнования<input name="name" maxlength="120" required></label><label>Дата<input name="date" type="date" required></label><label>Место проведения<input name="place" maxlength="120"></label><label>Дисциплина<input name="sport" maxlength="120"></label><label>Система зачёта<select name="scoring"><option value="time">Минимальное время</option><option value="points">Максимум очков</option></select></label><label>Стартовый взнос, ₽<input name="fee" type="number" min="0" max="1000000" step="1"></label></form></section>
@@ -244,28 +269,60 @@
   'use strict';
   const C = window.StartCore;
   const KEY = 'startpult.v1';
+  const ARCHIVE_KEY = 'startpult.v2.archive';
   const q = selector => document.querySelector(selector);
   const qa = selector => [...document.querySelectorAll(selector)];
   const esc = text => String(text ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[char]));
   const rub = v => new Intl.NumberFormat('ru-RU', {maximumFractionDigits:0}).format(v) + ' ₽';
-  let state;
+  const makeId = () => globalThis.crypto && typeof crypto.randomUUID === 'function' ?
+    crypto.randomUUID() : 'event_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+  const isOldDemo = data => data.event.name === 'Кубок северного ветра' &&
+    data.event.sport === 'Тактический биатлон · личный зачёт' &&
+    data.event.place === 'Санкт-Петербург' && data.participants.length <= 7;
+  const normalizeArchive = input => {
+    if (!input || input.schema !== 2 || !Array.isArray(input.events) ||
+        input.events.length < 1 || input.events.length > 100) throw new Error('Неверный формат архива');
+    const ids = new Set();
+    const events = input.events.map(item => {
+      if (!item || !item.data || !item.data.event || !Array.isArray(item.data.participants))
+        throw new Error('В архиве повреждён турнир');
+      if (item.data.participants.length > 2500) throw new Error('Слишком много участников в турнире');
+      let id = typeof item.id === 'string' && item.id.length < 100 ? item.id : makeId();
+      if (!id || ids.has(id)) id = makeId();
+      ids.add(id);
+      let data = C.normalizeState(item.data);
+      if (isOldDemo(data)) data = C.newEvent();
+      return { id, data, createdAt: String(item.createdAt || ''), updatedAt: String(item.updatedAt || '') };
+    });
+    return {schema:2, activeId:ids.has(input.activeId) ? input.activeId : events[0].id, events};
+  };
+  const freshArchive = data => {
+    const id = makeId();
+    return {schema:2, activeId:id, events:[{id, data, createdAt:new Date().toISOString(), updatedAt:new Date().toISOString()}]};
+  };
+  let archive, currentId, state;
   let activeId = null;
   let toastTimer;
   let canPersist = true;
-  try { const item = localStorage.getItem(KEY); state = item ? C.normalizeState(JSON.parse(item)) : C.newEvent(); }
-  catch (err) { state = C.newEvent(); canPersist = false; }
-  // Older builds contained an unauthorized example tournament. Discard only
-  // that recognizable sample, leaving genuine tournament records untouched.
-  if (state.event.name === 'Кубок северного ветра' &&
-      state.event.sport === 'Тактический биатлон · личный зачёт' &&
-      state.event.place === 'Санкт-Петербург' &&
-      state.participants.length <= 7) {
-    state = C.newEvent();
-    if (canPersist) {
-      try { localStorage.setItem(KEY, JSON.stringify(state)); }
-      catch { canPersist = false; }
+  let loadError = false;
+  try {
+    const saved = localStorage.getItem(ARCHIVE_KEY);
+    if (saved) archive = normalizeArchive(JSON.parse(saved));
+    else {
+      const legacy = localStorage.getItem(KEY);
+      let data = legacy ? C.normalizeState(JSON.parse(legacy)) : C.newEvent();
+      if (isOldDemo(data)) data = C.newEvent();
+      archive = freshArchive(data);
+      // Keep the previous v1 key untouched so migration can always be recovered.
+      localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archive));
     }
+  } catch (err) {
+    archive = freshArchive(C.newEvent());
+    canPersist = false;
+    loadError = true;
   }
+  currentId = archive.activeId;
+  state = C.normalizeState(archive.events.find(event => event.id === currentId).data);
 
   function notify(msg) {
     const el = q('#toast');
@@ -274,12 +331,99 @@
     el.classList.add('show');
     toastTimer = setTimeout(() => el.classList.remove('show'), 4000);
   }
+  function persistArchive(next) {
+    if (!canPersist) { notify('Автосохранение недоступно. Скачайте резервную копию.'); return false; }
+    try { localStorage.setItem(ARCHIVE_KEY, JSON.stringify(next)); return true; }
+    catch { canPersist = false; notify('Не удалось сохранить. Скачайте резервную копию JSON.'); return false; }
+  }
   function save() {
-    if (canPersist) {
-      try { localStorage.setItem(KEY, JSON.stringify(state)); }
-      catch { canPersist = false; notify('Хранилище недоступно. Скачайте резервную копию JSON.'); }
+    const item = archive.events.find(event => event.id === currentId);
+    if (item) {
+      item.data = C.normalizeState(state);
+      item.updatedAt = new Date().toISOString();
+      archive.activeId = currentId;
+      persistArchive(archive);
     }
     render();
+  }
+  function renderArchive() {
+    const target = q('#tournamentList');
+    if (!target) return;
+    target.replaceChildren();
+    archive.events.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'tournament-row' + (item.id === currentId ? ' current' : '');
+      const info = document.createElement('button');
+      info.type = 'button';
+      info.className = 'tournament-select';
+      info.setAttribute('aria-current', item.id === currentId ? 'true' : 'false');
+      const name = document.createElement('strong');
+      name.textContent = item.data.event.name || 'Без названия';
+      const meta = document.createElement('small');
+      meta.textContent = (item.data.event.date || 'Дата не указана') + ' · ' +
+        item.data.participants.length + ' участников' + (item.id === currentId ? ' · Открыт' : '');
+      info.append(name,meta);
+      info.addEventListener('click',() => openTournament(item.id));
+      row.append(info);
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'tournament-remove';
+      remove.textContent = 'Удалить';
+      remove.setAttribute('aria-label','Удалить турнир ' + item.data.event.name);
+      remove.addEventListener('click',() => deleteTournament(item.id));
+      row.append(remove);
+      target.append(row);
+    });
+    const count = q('#tournamentCount');
+    if (count) count.textContent = archive.events.length + ' сохранено на этом устройстве';
+  }
+  function openTournament(id) {
+    if (id === currentId) return;
+    if (!canPersist) { notify('Хранилище недоступно. Переключение отключено.'); return; }
+    const item = archive.events.find(event => event.id === id);
+    if (!item) return;
+    const next = {...archive,activeId:id};
+    if (!persistArchive(next)) return;
+    archive = next;
+    currentId = id;
+    state = C.normalizeState(item.data);
+    q('#participantSearch').value = '';
+    render();
+    go('dashboard');
+    notify('Турнир открыт');
+  }
+  function newTournament() {
+    if (!canPersist) { notify('Хранилище недоступно. Скачайте резервную копию.'); return; }
+    if (archive.events.length >= 100) { notify('Максимум 100 турниров в браузере'); return; }
+    const id = makeId();
+    const item = {id, data:C.newEvent(), createdAt:new Date().toISOString(), updatedAt:new Date().toISOString()};
+    const next = {...archive, activeId:id, events:[...archive.events,item]};
+    if (!persistArchive(next)) return;
+    archive = next; currentId = id; state = C.normalizeState(item.data);
+    q('#participantSearch').value = '';
+    render(); go('dashboard'); q('#eventForm').elements.name.focus();
+    notify('Новый турнир создан. Другие турниры сохранены.');
+  }
+  function deleteTournament(id) {
+    const item = archive.events.find(event => event.id === id);
+    if (!item) return;
+    if (!confirm('Безвозвратно удалить турнир «' + item.data.event.name + '» и его участников? Сначала скачайте резервную копию.')) return;
+    let next = {...archive,events:archive.events.filter(event=>event.id!==id)};
+    if (!next.events.length) {
+      const fallback = freshArchive(C.newEvent());
+      next.events = fallback.events;
+      next.activeId = fallback.activeId;
+    } else if (id === currentId) next.activeId = next.events[0].id;
+    if (!persistArchive(next)) return;
+    archive = next;
+    currentId = archive.activeId;
+    state = C.normalizeState(archive.events.find(event=>event.id===currentId).data);
+    render();go('dashboard');notify('Турнир удалён');
+  }
+  function backupAll() {
+    const blob = JSON.stringify(archive,null,2);
+    textFile('startpult_all_tournaments.json',blob,'application/json;charset=utf-8');
+    notify('Сохранена копия всех турниров');
   }
   function go(tab) {
     qa('.screen').forEach(item => item.classList.toggle('active', item.id === 'screen-' + tab));
@@ -320,6 +464,7 @@
     return score === null ? (p.status !== 'OK' ? p.status : '—') : (state.event.scoring === 'time' ? C.formatTime(score) : String(score));
   }
   function render() {
+    renderArchive();
     q('#heroName').textContent = state.event.name;
     q('#heroMeta').textContent = [state.event.date, state.event.place, state.event.sport].filter(Boolean).join(' · ');
     q('#metricTotal').textContent = state.participants.length;
@@ -416,6 +561,25 @@
     const button = event.target.closest('button');if(!button)return;
     if(button.dataset.edit)openDialog(button.dataset.edit);
     else if(button.dataset.delete){const person=state.participants.find(p=>p.id===button.dataset.delete);if(person && confirm(`Удалить «${person.name}» из турнира?`)){state.participants=state.participants.filter(p=>p.id!==person.id);save();notify('Участник удалён');}}
+  });
+  q('#newTournament').addEventListener('click',newTournament);
+  q('#backupAll').addEventListener('click',backupAll);
+  q('#restoreAll').addEventListener('click',()=>q('#restoreAllFile').click());
+  q('#restoreAllFile').addEventListener('change',async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      if (file.size > 15_000_000) throw Error('Архив слишком большой, максимум 15 МБ');
+      const restored = normalizeArchive(JSON.parse(await file.text()));
+      if (confirm('Заменить ВСЕ сохранённые в этом браузере турниры архивом (' + restored.events.length + ')? Сначала скачайте текущую резервную копию.')) {
+        if (persistArchive(restored)) {
+          archive = restored; currentId = restored.activeId;
+          state = C.normalizeState(restored.events.find(item=>item.id===currentId).data);
+          render(); go('dashboard'); notify('Восстановлено турниров: ' + restored.events.length);
+        }
+      }
+    } catch (error) { notify('Архив не восстановлен: ' + error.message); }
+    e.target.value = '';
   });
   ['#backupSidebar','#backupMain'].forEach(id=>q(id).addEventListener('click',backup));
   ['#downloadCsv','#exportCsv2'].forEach(id=>q(id).addEventListener('click',exportCsv));
